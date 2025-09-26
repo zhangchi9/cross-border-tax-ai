@@ -1,5 +1,6 @@
 import google.generativeai as genai
-from typing import AsyncGenerator, Dict, Any
+from openai import OpenAI
+from typing import AsyncGenerator, Dict, Any, Union
 from tenacity import retry, stop_after_attempt, wait_exponential
 import json
 import re
@@ -9,10 +10,20 @@ from .config import settings
 
 
 class TaxConsultant:
-    def __init__(self):
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        self.model = genai.GenerativeModel('gemini-1.5-flash-8b')
+    def __init__(self, model_provider: str = None):
+        self.model_provider = model_provider or settings.AI_MODEL_PROVIDER
         self.system_prompt = self._get_system_prompt()
+
+        # Initialize the appropriate AI client
+        if self.model_provider == "openai":
+            self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
+            self.model_name = settings.OPENAI_MODEL
+        elif self.model_provider == "gemini":
+            genai.configure(api_key=settings.GEMINI_API_KEY)
+            self.model = genai.GenerativeModel(settings.GEMINI_MODEL)
+            self.model_name = settings.GEMINI_MODEL
+        else:
+            raise ValueError(f"Unsupported model provider: {self.model_provider}")
 
     def _get_system_prompt(self) -> str:
         return """
@@ -158,21 +169,44 @@ Only provide final suggestions after asking clarifying questions.
 """
 
         try:
-            response = await self.model.generate_content_async(prompt, stream=True)
-            full_response = ""
+            if self.model_provider == "openai":
+                # OpenAI streaming
+                full_response = ""
+                messages = [
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt}
+                ]
 
-            async for chunk in response:
-                if chunk.text:
-                    full_response += chunk.text
-                    # Don't yield chunks during streaming to avoid showing QUICK_REPLIES
-                    # We'll process everything at the end
+                stream = self.openai_client.chat.completions.create(
+                    model=self.model_name,
+                    messages=messages,
+                    stream=True,
+                    temperature=0.7,
+                    max_tokens=2000
+                )
 
-            # After streaming is complete, extract quick_replies from full response
-            if full_response:
-                clean_text, quick_replies = self.extract_quick_replies(full_response)
+                for chunk in stream:
+                    if chunk.choices[0].delta.content:
+                        full_response += chunk.choices[0].delta.content
 
-                # Yield the clean text (without QUICK_REPLIES)
-                yield clean_text, quick_replies
+                # Extract quick_replies from full response
+                if full_response:
+                    clean_text, quick_replies = self.extract_quick_replies(full_response)
+                    yield clean_text, quick_replies
+
+            elif self.model_provider == "gemini":
+                # Gemini streaming
+                response = await self.model.generate_content_async(prompt, stream=True)
+                full_response = ""
+
+                async for chunk in response:
+                    if chunk.text:
+                        full_response += chunk.text
+
+                # Extract quick_replies from full response
+                if full_response:
+                    clean_text, quick_replies = self.extract_quick_replies(full_response)
+                    yield clean_text, quick_replies
 
         except Exception as e:
             yield f"I apologize, but I encountered an error. Please try again. Error: {str(e)}", []
