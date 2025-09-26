@@ -4,28 +4,17 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy source code
-COPY . .
-
-# Create non-root user
-RUN addgroup -g 1001 -S app && \
-    adduser -S app -u 1001 && \
-    chown -R app:app /app
-
-USER app
+# Don't copy source code - it will be mounted as volume
+# This ensures hot reload works properly
 
 # Expose port
 EXPOSE 5173
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:5173 || exit 1
-
-# Start development server
+# Start development server with polling for better Windows compatibility
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]

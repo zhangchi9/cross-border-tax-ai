@@ -13,14 +13,39 @@ export const useTaxConsultant = () => {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const initializeSession = useCallback(async () => {
+  const initializeSession = useCallback(async (forceNew = false) => {
     try {
       setIsLoading(true);
       setError(null);
 
+      // Check for existing session if not forcing new
+      if (!forceNew) {
+        const existingSessionId = localStorage.getItem('tax_consultant_session_id');
+        if (existingSessionId) {
+          try {
+            // Try to retrieve existing session
+            const response = await TaxConsultantAPI.getSession(existingSessionId);
+            setSessionId(existingSessionId);
+            setCaseFile(response.case_file);
+            setIsLoading(false);
+            return;
+          } catch (err) {
+            // If session doesn't exist or is invalid, create a new one
+            localStorage.removeItem('tax_consultant_session_id');
+          }
+        }
+      } else {
+        // Clear existing session when forcing new
+        localStorage.removeItem('tax_consultant_session_id');
+      }
+
+      // Create new session
       const response = await TaxConsultantAPI.createSession();
       setSessionId(response.session_id);
       setCaseFile(response.case_file);
+
+      // Store session ID in localStorage
+      localStorage.setItem('tax_consultant_session_id', response.session_id);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to initialize session');
     } finally {
@@ -223,6 +248,18 @@ export const useTaxConsultant = () => {
     }
   }, [sessionId, isStreaming]);
 
+  const startNewSession = useCallback(() => {
+    // Clear state
+    setSessionId(null);
+    setCaseFile(null);
+    setCurrentStreamingMessage('');
+    setQuickReplyOptions([]);
+    setError(null);
+
+    // Initialize new session
+    initializeSession(true);
+  }, [initializeSession]);
+
   return {
     sessionId,
     caseFile,
@@ -236,5 +273,6 @@ export const useTaxConsultant = () => {
     forceFinalSuggestions,
     canForceFinal: canForceFinal(),
     initializeSession,
+    startNewSession,
   };
 };

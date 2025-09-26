@@ -21,6 +21,7 @@ const AppContent: React.FC = () => {
     editMessage,
     forceFinalSuggestions,
     canForceFinal,
+    startNewSession,
   } = useTaxConsultant();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,6 +92,14 @@ const AppContent: React.FC = () => {
       <div className="chat-container">
         <div className="chat-header">
           <h1>Cross-Border Tax Consultant</h1>
+          <button
+            className="new-session-button"
+            onClick={startNewSession}
+            disabled={isStreaming}
+            title="Start a new consultation session"
+          >
+            New Session
+          </button>
         </div>
 
         <div className="disclaimer">
