@@ -15,8 +15,8 @@ class SessionManager:
 
         # Add welcome message
         welcome_message = ChatMessage(
-            role=MessageRole.SYSTEM,
-            content="This is general information, not legal or tax advice. Consult a qualified professional."
+            role=MessageRole.ASSISTANT,
+            content="Hi, I am your cross-border tax consultant. Please explain your tax situation in a few words."
         )
         case_file.messages.append(welcome_message)
 
