@@ -7,7 +7,10 @@
       "Bash(./setup.ps1)",
       "Bash(docker-compose up:*)",
       "Bash(docker-compose:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(start \"http://localhost:5173\")",
+      "Bash(python test:*)",
+      "Bash(del test_quick_replies.py)"
     ],
     "deny": [],
     "ask": []

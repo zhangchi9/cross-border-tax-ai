@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChatMessage } from './components/ChatMessage';
 import { ChatInput } from './components/ChatInput';
@@ -16,6 +16,7 @@ const AppContent: React.FC = () => {
     isStreaming,
     error,
     currentStreamingMessage,
+    quickReplyOptions,
     sendMessage,
     forceFinalSuggestions,
     canForceFinal,
@@ -135,6 +136,7 @@ const AppContent: React.FC = () => {
         <ChatInput
           onSendMessage={handleSendMessage}
           disabled={isStreaming}
+          quickReplyOptions={quickReplyOptions}
         />
       </div>
 

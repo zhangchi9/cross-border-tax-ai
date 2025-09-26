@@ -60,6 +60,7 @@ class StreamingResponse(BaseModel):
     content: str
     is_final: bool = False
     case_file: Optional[CaseFile] = None
+    quick_replies: Optional[List[str]] = None
 
 
 class FinalSuggestions(BaseModel):

@@ -416,3 +416,51 @@ body {
     order: 1;
   }
 }
+
+/* Quick Reply Buttons */
+.quick-reply-container {
+  margin-bottom: 0.5rem;
+}
+
+.quick-reply-title {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.quick-reply-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.quick-reply-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quick-reply-button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.quick-reply-button:active:not(:disabled) {
+  background-color: #2563eb;
+  color: white;
+  transform: translateY(1px);
+}
+
+.quick-reply-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

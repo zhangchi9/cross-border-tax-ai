@@ -9,6 +9,7 @@ export const useTaxConsultant = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentStreamingMessage, setCurrentStreamingMessage] = useState('');
+  const [quickReplyOptions, setQuickReplyOptions] = useState<string[]>([]);
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -33,6 +34,7 @@ export const useTaxConsultant = () => {
     try {
       setIsStreaming(true);
       setCurrentStreamingMessage('');
+      setQuickReplyOptions([]);
       setError(null);
 
       // Add user message optimistically
@@ -61,6 +63,11 @@ export const useTaxConsultant = () => {
         }
 
         if (chunk.is_final) {
+          // Handle quick_replies if present
+          if (chunk.quick_replies) {
+            setQuickReplyOptions(chunk.quick_replies);
+          }
+
           // Add assistant message to case file
           const assistantMessage: ChatMessage = {
             role: 'assistant',
@@ -178,6 +185,7 @@ export const useTaxConsultant = () => {
     isStreaming,
     error,
     currentStreamingMessage,
+    quickReplyOptions,
     sendMessage,
     forceFinalSuggestions,
     canForceFinal: canForceFinal(),

@@ -70,18 +70,33 @@ async def chat(request: ChatRequest):
     async def generate():
         try:
             full_response = ""
-            async for chunk in tax_consultant.generate_response(case_file, request.message):
-                full_response += chunk
-                yield f"data: {json.dumps({'content': chunk, 'is_final': False})}\n\n"
-                await asyncio.sleep(0.01)  # Small delay for streaming effect
+            quick_replies = []
+
+            async for chunk_content, chunk_quick_replies in tax_consultant.generate_response(case_file, request.message):
+                if chunk_content:
+                    full_response = chunk_content  # This is already the clean content
+                    # Capture quick_replies when they come in
+                    if chunk_quick_replies:
+                        quick_replies = chunk_quick_replies
+
+                    # Stream the clean content character by character for typing effect
+                    for char in chunk_content:
+                        yield f"data: {json.dumps({'content': char, 'is_final': False})}\n\n"
+                        await asyncio.sleep(0.01)
 
             # Update case file with complete response
             updated_case_file = tax_consultant.update_case_file(case_file, request.message, full_response)
             session_manager.add_message(request.session_id, MessageRole.ASSISTANT, full_response)
             session_manager.update_session(request.session_id, updated_case_file)
 
-            # Send final message with updated case file
-            yield f"data: {json.dumps({'content': '', 'is_final': True, 'case_file': updated_case_file.dict()}, default=json_encoder)}\n\n"
+            # Send final message with updated case file and quick_replies
+            final_response = {
+                'content': '',
+                'is_final': True,
+                'case_file': updated_case_file.dict(),
+                'quick_replies': quick_replies if quick_replies else None
+            }
+            yield f"data: {json.dumps(final_response, default=json_encoder)}\n\n"
 
         except Exception as e:
             error_msg = f"I apologize, but I encountered an error: {str(e)}"

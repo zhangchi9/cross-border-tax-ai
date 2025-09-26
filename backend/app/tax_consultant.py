@@ -47,11 +47,63 @@ CRITICAL SAFETY RULES:
 - Handle common cross-border pairs (US↔Canada, US↔EU, etc.)
 - Detect tax treaty relevance (residency tie-breakers, foreign tax credits, PFIC, etc.)
 
-Respond conversationally but professionally. Ask one question at a time when possible.
+CONVERSATION RULES:
+- ALWAYS ask only ONE question at a time - never ask multiple questions in a single response
+- Wait for the user's answer before asking the next question
+- Keep responses focused and concise
+- After each user response, ask the most important follow-up question
+- Do NOT explain why you're asking each question or provide motivational statements
+- Do NOT say things like "this is crucial" or "this information is vital" or "to develop a comprehensive plan"
+- Ask questions directly without justifying why you need the information
+
+QUICK REPLIES FORMAT - CRITICAL:
+- ALWAYS include QUICK_REPLIES when asking questions with clear options
+- Format: End your response with QUICK_REPLIES: ["Option 1", "Option 2", "Option 3"]
+- Examples:
+  "What is your tax residency status? QUICK_REPLIES: ["US resident", "Canadian resident", "Neither"]"
+  "Which countries are you considering? QUICK_REPLIES: ["US", "Canada", "UK", "Germany", "Other"]"
+  "Which country will you stay longer? QUICK_REPLIES: ["US", "Canada"]"
+- Use this for countries, statuses, yes/no questions, and other clear choices
+- Even for seemingly open questions, provide common options with "Other" as the last choice
+
+Respond conversationally but professionally.
 """
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
-    async def generate_response(self, case_file: CaseFile, user_message: str) -> AsyncGenerator[str, None]:
+    def extract_quick_replies(self, response_text: str) -> tuple[str, list[str]]:
+        """Extract QUICK_REPLIES from response text and return cleaned text + options"""
+        import re
+
+        # Look for QUICK_REPLIES: ["option1", "option2", ...]
+        pattern = r'QUICK_REPLIES:\s*\[(.*?)\]'
+        match = re.search(pattern, response_text, re.IGNORECASE | re.DOTALL)
+
+        if match:
+            # Extract the options string
+            options_str = match.group(1)
+
+            # Parse individual options (handle quotes)
+            import json
+            try:
+                # Try to parse as JSON array
+                options_json = f'[{options_str}]'
+                options = json.loads(options_json)
+
+                # Clean the response text by removing QUICK_REPLIES
+                clean_text = response_text[:match.start()].strip()
+
+                return clean_text, options
+            except json.JSONDecodeError:
+                # If JSON parsing fails, fall back to simple split
+                options = [opt.strip().strip('"\'') for opt in options_str.split(',')]
+                options = [opt for opt in options if opt]  # Remove empty strings
+
+                clean_text = response_text[:match.start()].strip()
+                return clean_text, options
+
+        return response_text, []
+
+    async def generate_response(self, case_file: CaseFile, user_message: str) -> AsyncGenerator[tuple[str, list[str]], None]:
         conversation_history = self._build_conversation_context(case_file)
 
         prompt = f"""
@@ -73,11 +125,23 @@ Only provide final suggestions after asking clarifying questions.
 
         try:
             response = await self.model.generate_content_async(prompt, stream=True)
+            full_response = ""
+
             async for chunk in response:
                 if chunk.text:
-                    yield chunk.text
+                    full_response += chunk.text
+                    # Don't yield chunks during streaming to avoid showing QUICK_REPLIES
+                    # We'll process everything at the end
+
+            # After streaming is complete, extract quick_replies from full response
+            if full_response:
+                clean_text, quick_replies = self.extract_quick_replies(full_response)
+
+                # Yield the clean text (without QUICK_REPLIES)
+                yield clean_text, quick_replies
+
         except Exception as e:
-            yield f"I apologize, but I encountered an error. Please try again. Error: {str(e)}"
+            yield f"I apologize, but I encountered an error. Please try again. Error: {str(e)}", []
 
     def _build_conversation_context(self, case_file: CaseFile) -> str:
         context = []

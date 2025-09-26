@@ -1,11 +1,13 @@
 import React, { useState, KeyboardEvent, useRef, useEffect } from 'react';
+import { QuickReply } from './QuickReply';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   disabled: boolean;
+  quickReplyOptions?: string[];
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled, quickReplyOptions = [] }) => {
   const [message, setMessage] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,8 +46,22 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled })
     }
   };
 
+  const handleQuickReply = (option: string) => {
+    if (!disabled) {
+      onSendMessage(option);
+      setMessage('');
+    }
+  };
+
   return (
     <div className="input-container">
+      {quickReplyOptions.length > 0 && (
+        <QuickReply
+          options={quickReplyOptions}
+          onOptionClick={handleQuickReply}
+          disabled={disabled}
+        />
+      )}
       <form onSubmit={handleSubmit} className="input-form">
         <div className="input-wrapper">
           <textarea
