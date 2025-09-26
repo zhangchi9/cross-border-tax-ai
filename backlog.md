@@ -1,5 +1,3 @@
-Working in process: ask one quesiton at a time. Add a quick response button. 
-
 * Feature add: Allow user to edit it pass response 
 * If the AI getting all past context? I think yes
 * Feature add: If getting conflict anser from the user. Ask the user to clarify. 
@@ -9,3 +7,6 @@ Working in process: ask one quesiton at a time. Add a quick response button.
 * UI change: the UI looks very ugly. 
 * Deployment 
 * Monetization 
+
+v0.1 update
+1. ask one quesiton at a time. Add a quick response button. 

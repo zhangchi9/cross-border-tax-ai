@@ -6,7 +6,7 @@ import json
 import asyncio
 from datetime import datetime
 
-from .models import ChatRequest, CaseFile, MessageRole, ConversationPhase
+from .models import ChatRequest, EditMessageRequest, CaseFile, MessageRole, ConversationPhase
 from .session_manager import session_manager
 from .tax_consultant import TaxConsultant
 from .config import settings
@@ -86,6 +86,75 @@ async def chat(request: ChatRequest):
 
             # Update case file with complete response
             updated_case_file = tax_consultant.update_case_file(case_file, request.message, full_response)
+            session_manager.add_message(request.session_id, MessageRole.ASSISTANT, full_response)
+            session_manager.update_session(request.session_id, updated_case_file)
+
+            # Send final message with updated case file and quick_replies
+            final_response = {
+                'content': '',
+                'is_final': True,
+                'case_file': updated_case_file.dict(),
+                'quick_replies': quick_replies if quick_replies else None
+            }
+            yield f"data: {json.dumps(final_response, default=json_encoder)}\n\n"
+
+        except Exception as e:
+            error_msg = f"I apologize, but I encountered an error: {str(e)}"
+            yield f"data: {json.dumps({'content': error_msg, 'is_final': True})}\n\n"
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "text/event-stream",
+        }
+    )
+
+
+@app.post("/message/edit")
+async def edit_message(request: EditMessageRequest):
+    # Edit the message and truncate conversation
+    case_file = session_manager.edit_message_and_truncate(
+        request.session_id,
+        request.message_id,
+        request.new_content
+    )
+
+    if not case_file:
+        raise HTTPException(status_code=404, detail="Session or message not found")
+
+    # Check for sensitive information
+    if _contains_sensitive_info(request.new_content):
+        error_msg = "Please don't share sensitive personal identifiers like SSN, SIN, or full account numbers. I can help with general tax situations without this information."
+        session_manager.add_message(request.session_id, MessageRole.ASSISTANT, error_msg)
+        return json.loads(json.dumps({
+            "content": error_msg,
+            "case_file": case_file.dict(),
+            "quick_replies": None
+        }, default=json_encoder))
+
+    # Generate new response based on the edited conversation
+    async def generate():
+        try:
+            full_response = ""
+            quick_replies = []
+
+            async for chunk_content, chunk_quick_replies in tax_consultant.generate_response(case_file, request.new_content):
+                if chunk_content:
+                    full_response = chunk_content
+                    # Capture quick_replies when they come in
+                    if chunk_quick_replies:
+                        quick_replies = chunk_quick_replies
+
+                    # Stream the clean content character by character for typing effect
+                    for char in chunk_content:
+                        yield f"data: {json.dumps({'content': char, 'is_final': False})}\n\n"
+                        await asyncio.sleep(0.01)
+
+            # Update case file with complete response
+            updated_case_file = tax_consultant.update_case_file(case_file, request.new_content, full_response)
             session_manager.add_message(request.session_id, MessageRole.ASSISTANT, full_response)
             session_manager.update_session(request.session_id, updated_case_file)
 

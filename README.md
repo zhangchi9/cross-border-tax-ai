@@ -11,6 +11,7 @@ This application provides general information only and is not legal or tax advic
 - **Conversational Interface**: Natural chat-based interaction with streaming responses
 - **Multi-Phase Flow**: Systematic information gathering through intake, clarifications, and final suggestions
 - **Case File Management**: Real-time tracking of user information and conversation state
+- **Message Editing**: Edit previous messages to explore different scenarios (truncates conversation after edit)
 - **Safety & Compliance**: Built-in protection against collecting sensitive identifiers
 - **International Coverage**: Handles common cross-border tax scenarios (US↔Canada, US↔EU, etc.)
 - **Mobile Responsive**: Works on desktop and mobile devices
@@ -64,7 +65,7 @@ make setup
 docker-compose up -d
 
 # Or for development with hot reload
-docker-compose -f docker-compose.dev.yml up
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
 **Access the application:**
@@ -169,16 +170,55 @@ After sufficient information is gathered, the AI provides:
 - **Forms Involved**: Tax forms that may be required (marked as "likely")
 - **Risks & Questions**: Areas requiring professional attention
 
+### 4. Message Editing Feature
+You can edit any of your previous messages to explore different scenarios:
+- **Hover** over any of your messages to see the edit button (✏️)
+- **Click** the edit button to modify your response
+- **Save** your changes to continue the conversation from that point
+- All messages after the edited message will be removed
+- The AI will respond based on the new conversation flow
+
 ## API Endpoints
 
 - `POST /session/create` - Create new consultation session
 - `GET /session/{id}` - Get session details
 - `POST /chat` - Send message (streaming response)
+- `POST /message/edit` - Edit a previous message (streaming response)
 - `POST /session/{id}/force_final` - Request final suggestions
 
 ## Development
 
-### Backend Development
+### 🐳 Docker Development (Recommended)
+
+The easiest way to develop with hot reload and automatic restarts:
+
+```bash
+# Start development containers with hot reload
+docker-compose -f docker-compose.dev.yml up -d
+
+# View logs (useful for debugging)
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop development containers
+docker-compose -f docker-compose.dev.yml down
+
+# Restart containers (if needed after major changes)
+docker-compose -f docker-compose.dev.yml restart
+```
+
+**Development URLs:**
+- **Frontend**: http://localhost:5173 (with hot reload)
+- **Backend**: http://localhost:8000 (with auto-reload)
+
+**Development Features:**
+- Frontend: Hot reload on file changes
+- Backend: Auto-reload on Python file changes
+- Volume mounting: Your code changes are immediately reflected
+- Debug logging: Enhanced logging for development
+
+### Manual Development Setup
+
+#### Backend Development
 
 ```bash
 cd backend
@@ -196,7 +236,7 @@ black .
 python -m uvicorn app.main:app --reload
 ```
 
-### Frontend Development
+#### Frontend Development
 
 ```bash
 cd frontend

@@ -111,4 +111,55 @@ export class TaxConsultantAPI {
       reader.releaseLock();
     }
   }
+
+  static async *editMessage(sessionId: string, messageId: string, newContent: string): AsyncGenerator<any, void, unknown> {
+    const response = await fetch(`${API_BASE_URL}/message/edit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        message_id: messageId,
+        new_content: newContent,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to edit message');
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('No response body');
+    }
+
+    const decoder = new TextDecoder();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data.trim()) {
+              try {
+                const parsed = JSON.parse(data);
+                yield parsed;
+              } catch (e) {
+                console.error('Failed to parse SSE data:', e);
+              }
+            }
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
 }

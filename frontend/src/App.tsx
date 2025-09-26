@@ -18,6 +18,7 @@ const AppContent: React.FC = () => {
     currentStreamingMessage,
     quickReplyOptions,
     sendMessage,
+    editMessage,
     forceFinalSuggestions,
     canForceFinal,
   } = useTaxConsultant();
@@ -98,9 +99,20 @@ const AppContent: React.FC = () => {
         </div>
 
         <div className="messages-container">
-          {caseFile?.messages.map((message, index) => (
-            <ChatMessage key={index} message={message} />
-          ))}
+          {caseFile?.messages.map((message, index) => {
+            // Add ID if missing (for backward compatibility)
+            if (!message.id) {
+              message.id = crypto.randomUUID();
+            }
+            return (
+              <ChatMessage
+                key={message.id || index}
+                message={message}
+                onEdit={message.role === 'user' ? editMessage : undefined}
+                canEdit={!isStreaming}
+              />
+            );
+          })}
 
           {isStreaming && (
             <>

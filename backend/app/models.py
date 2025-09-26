@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any
 from enum import Enum
 from datetime import datetime
+import uuid
 
 
 class ConversationPhase(str, Enum):
@@ -19,6 +20,7 @@ class MessageRole(str, Enum):
 class ChatMessage(BaseModel):
     model_config = ConfigDict(json_encoders={datetime: lambda v: v.isoformat()})
 
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     role: MessageRole
     content: str
     timestamp: datetime = Field(default_factory=datetime.now)
@@ -54,6 +56,12 @@ class CaseFile(BaseModel):
 class ChatRequest(BaseModel):
     session_id: str
     message: str
+
+
+class EditMessageRequest(BaseModel):
+    session_id: str
+    message_id: str
+    new_content: str
 
 
 class StreamingResponse(BaseModel):

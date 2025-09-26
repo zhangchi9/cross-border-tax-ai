@@ -39,6 +39,7 @@ export const useTaxConsultant = () => {
 
       // Add user message optimistically
       const userMessage: ChatMessage = {
+        id: crypto.randomUUID(),
         role: 'user',
         content: message,
         timestamp: new Date().toISOString(),
@@ -70,6 +71,7 @@ export const useTaxConsultant = () => {
 
           // Add assistant message to case file
           const assistantMessage: ChatMessage = {
+            id: crypto.randomUUID(),
             role: 'assistant',
             content: fullResponse,
             timestamp: new Date().toISOString(),
@@ -116,6 +118,7 @@ export const useTaxConsultant = () => {
 
         if (chunk.is_final) {
           const assistantMessage: ChatMessage = {
+            id: crypto.randomUUID(),
             role: 'assistant',
             content: fullResponse,
             timestamp: new Date().toISOString(),
@@ -178,6 +181,48 @@ export const useTaxConsultant = () => {
     };
   }, []);
 
+  const editMessage = useCallback(async (messageId: string, newContent: string) => {
+    if (!sessionId || isStreaming) return;
+
+    try {
+      setIsStreaming(true);
+      setCurrentStreamingMessage('');
+      setQuickReplyOptions([]);
+      setError(null);
+
+      // Start streaming response
+      let fullResponse = '';
+      const stream = TaxConsultantAPI.editMessage(sessionId, messageId, newContent);
+
+      for await (const chunk of stream) {
+        if (chunk.content) {
+          fullResponse += chunk.content;
+          setCurrentStreamingMessage(fullResponse);
+        }
+
+        if (chunk.is_final) {
+          // Handle quick_replies if present
+          if (chunk.quick_replies) {
+            setQuickReplyOptions(chunk.quick_replies);
+          }
+
+          // Update the case file with the edited conversation
+          if (chunk.case_file) {
+            setCaseFile(chunk.case_file);
+          }
+
+          setCurrentStreamingMessage('');
+          break;
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to edit message');
+      setCurrentStreamingMessage('');
+    } finally {
+      setIsStreaming(false);
+    }
+  }, [sessionId, isStreaming]);
+
   return {
     sessionId,
     caseFile,
@@ -187,6 +232,7 @@ export const useTaxConsultant = () => {
     currentStreamingMessage,
     quickReplyOptions,
     sendMessage,
+    editMessage,
     forceFinalSuggestions,
     canForceFinal: canForceFinal(),
     initializeSession,
