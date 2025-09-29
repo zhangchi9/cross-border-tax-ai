@@ -11,7 +11,10 @@
       "Bash(start \"http://localhost:5173\")",
       "Bash(python test:*)",
       "Bash(del test_quick_replies.py)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

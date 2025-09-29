@@ -1,0 +1,867 @@
+{
+    "residency_treaty": {
+        "title": "Residency & treaty status",
+        "tags": {
+            "us_person_worldwide_filing": {
+                "id": "us_person_worldwide_filing",
+                "name": "U.S. person (citizen/green-card holder) - worldwide U.S. filing",
+                "description": "You are a U.S. citizen or U.S. lawful permanent resident (green-card holder). The U.S. taxes you on worldwide income each year, regardless of where you live. You generally use the foreign tax credit to relieve double taxation; foreign asset/account reporting may also apply.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 1040",
+                            "type": "resident",
+                            "note": "Annual U.S. individual income tax return reporting worldwide income"
+                        },
+                        {
+                            "form": "Form 1116",
+                            "type": "Foreign Tax Credit",
+                            "note": "Claim credit for income tax paid to Canada to mitigate double tax"
+                        },
+                        {
+                            "form": "Form 8938",
+                            "type": "FATCA",
+                            "note": "Report specified foreign financial assets if thresholds are met"
+                        },
+                        {
+                            "form": "FinCEN Form 114",
+                            "type": "FBAR",
+                            "note": "Report non-U.S. financial accounts if aggregate balance exceeds USD $10,000 at any time"
+                        }
+                    ]
+                },
+                "why": "U.S. persons must report worldwide income on Form 1040; Form 1116 prevents double taxation. Form 8938 and FBAR satisfy foreign asset/account disclosure when thresholds are met."
+            },
+            "canadian_tax_resident_worldwide_filing": {
+                "id": "canadian_tax_resident_worldwide_filing",
+                "name": "Canadian tax resident (worldwide Canadian filing)",
+                "description": "You are a resident of Canada for tax purposes (factual or deemed). Canada taxes residents on worldwide income; foreign tax credits may be claimed for U.S. taxes paid. Foreign asset reporting may also apply.",
+                "forms": {
+                    "ca": [
+                        {
+                            "form": "T1 General",
+                            "type": "resident",
+                            "note": "Annual Canadian individual income tax return reporting worldwide income"
+                        },
+                        {
+                            "form": "Schedule T2209",
+                            "type": "Foreign Tax Credit",
+                            "note": "Claim federal foreign tax credit for U.S. income taxes paid"
+                        },
+                        {
+                            "form": "Form T1135",
+                            "type": "Foreign income verification statement",
+                            "note": "Report specified foreign property if cost amount exceeded CAD $100,000 at any time"
+                        }
+                    ]
+                },
+                "why": "Canadian residents report worldwide income on the T1; Schedule T2209 provides federal foreign tax credit relief for U.S.-taxed income. T1135 fulfills foreign asset disclosure when thresholds are met."
+            },
+            "us_resident_substantial_presence": {
+                "id": "us_resident_substantial_presence",
+                "name": "U.S. resident by substantial presence test",
+                "description": "You spent enough days physically in the U.S. this year (weighted 3-year formula) to be treated as a U.S. tax resident. You file a full U.S. resident return unless you qualify for an exception (e.g., closer connection).",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 1040",
+                            "type": "resident",
+                            "note": "or 1040-NR if claiming an exception"
+                        },
+                        {
+                            "form": "Form 8840",
+                            "type": "Closer Connection",
+                            "note": "if you're nonresident under that exception"
+                        }
+                    ]
+                },
+                "why": "Establishes your U.S. tax status; 8840 is required to claim the closer-connection exception to SPT."
+            },
+            "snowbird_closer_connection": {
+                "id": "snowbird_closer_connection",
+                "name": "Snowbird with closer connection to Canada (Form 8840)",
+                "description": "You were in the U.S. enough days to otherwise meet SPT but keep stronger ties to Canada and qualify to be taxed as a U.S. nonresident.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 8840",
+                            "note": "stand-alone if no 1040-NR is required, or attached to 1040-NR if you must file"
+                        }
+                    ]
+                },
+                "why": "Discloses the treaty/closer-connection facts so the IRS accepts nonresident status."
+            },
+            "residency_change_dual_status": {
+                "id": "residency_change_dual_status",
+                "name": "Residency change / dual-status year",
+                "description": "You became/ceased to be a U.S. resident mid-year (or vice-versa for Canada).",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Dual-status filings",
+                            "note": "part-year 1040 + 1040-NR statement as applicable"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "Part-year resident T1",
+                            "note": "with entry/departure reporting"
+                        }
+                    ]
+                },
+                "why": "Each country taxes you on different bases before/after the switch; filings split the year correctly. (General treaty framework in the Canada-U.S. Convention.)"
+            },
+            "treaty_based_position": {
+                "id": "treaty_based_position",
+                "name": "Treaty-based position disclosure",
+                "description": "You are taking a position under the Canada-U.S. treaty that overrides the default U.S. tax rules.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 8833",
+                            "note": "attach to 1040/1040-NR when required"
+                        }
+                    ]
+                },
+                "why": "U.S. law requires disclosure when a treaty position reduces or modifies U.S. tax."
+            }
+        }
+    },
+    "employment_payroll": {
+        "title": "Employment & payroll",
+        "tags": {
+            "wages_taxed_work_location": {
+                "id": "wages_taxed_work_location",
+                "name": "Wages taxed where the work was physically performed",
+                "description": "Salary is sourced to the country where you actually worked the days (work-day allocation). Default rule in Article XV of the treaty.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040",
+                            "note": "U.S. persons"
+                        },
+                        {
+                            "form": "1040-NR",
+                            "note": "nonresidents"
+                        },
+                        {
+                            "form": "Form 1116",
+                            "note": "if claiming a foreign tax credit"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1 return"
+                        },
+                        {
+                            "form": "Schedule T2209",
+                            "note": "foreign tax credit when applicable"
+                        }
+                    ]
+                },
+                "why": "Treaty Article XV gives source taxation to the work country; FTC avoids double tax."
+            },
+            "short_stay_exemption_us": {
+                "id": "short_stay_exemption_us",
+                "name": "Short-stay treaty exemption for wages (United States)",
+                "description": "A Canadian resident working briefly in the U.S. may be U.S. tax-exempt if the Article XV conditions (incl. \u2264183 days and no U.S. employer/PE cost bearing) are met.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040-NR",
+                            "note": "to claim exemption when required"
+                        },
+                        {
+                            "form": "8833",
+                            "note": "in some cases"
+                        }
+                    ]
+                },
+                "why": "To claim the treaty exemption properly under Article XV."
+            },
+            "short_stay_exemption_canada": {
+                "id": "short_stay_exemption_canada",
+                "name": "Short-stay treaty exemption for wages (Canada)",
+                "description": "A U.S. resident working briefly in Canada may be Canadian tax-exempt under Article XV.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "Regulation 102 payroll waiver (R102-R)",
+                            "note": "or Non-resident employer certification so withholding is waived when the treaty applies"
+                        }
+                    ]
+                },
+                "why": "Prevents payroll withholding when the treaty will exempt the income."
+            },
+            "remote_work_canada_for_us": {
+                "id": "remote_work_canada_for_us",
+                "name": "Remote work performed in Canada for a U.S. employer",
+                "description": "Wages are Canadian-source to the extent days were physically in Canada; usually also taxable by the U.S. if you're a U.S. person-use credits to coordinate.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040",
+                            "note": "Form 1116 (FTC)"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1"
+                        },
+                        {
+                            "form": "Nonresident-employer certification or Reg. 102 waiver",
+                            "note": "employer may need to avoid withholding if you're nonresident of Canada"
+                        }
+                    ]
+                },
+                "why": "Article XV sources by work location; filings line up withholding and credits."
+            },
+            "remote_work_us_for_canada": {
+                "id": "remote_work_us_for_canada",
+                "name": "Remote work performed in the United States for a Canadian employer",
+                "description": "Wages are U.S.-source for days in the U.S.; Canada may tax if you're a Canadian resident-coordinate via credits.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040/1040-NR",
+                            "note": "depending on U.S. status"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1",
+                            "note": "with FTC"
+                        }
+                    ]
+                },
+                "why": "Same Article XV sourcing & FTC rationale."
+            },
+            "state_convenience_employer": {
+                "id": "state_convenience_employer",
+                "name": "State \"convenience of the employer\" exposure",
+                "description": "Some U.S. states (e.g., NY, DE) tax wages to the employer's assigned office even when you worked remotely elsewhere, creating unexpected state tax.",
+                "forms": {
+                    "state": [
+                        {
+                            "form": "State return(s) where the rule applies",
+                            "note": "e.g., NY IT-201/203, plus home-state credit if allowed"
+                        }
+                    ]
+                },
+                "why": "State rules can ignore treaties; NY's memo explains the \"convenience\" rule."
+            },
+            "state_nonconformity": {
+                "id": "state_nonconformity",
+                "name": "State non-conformity with treaty/FTC",
+                "description": "Many states don't honor U.S. tax treaties or federal FTC rules; you may owe state tax even if federal/treaty relieves it.",
+                "forms": {
+                    "state": [
+                        {
+                            "form": "State return(s)",
+                            "note": "as required"
+                        }
+                    ]
+                },
+                "why": "Example: NY generally doesn't allow treaty to exempt state income."
+            },
+            "social_security_totalization": {
+                "id": "social_security_totalization",
+                "name": "Social security Totalization & certificate of coverage",
+                "description": "The U.S.\u2013Canada Totalization Agreement generally makes you pay only one social tax system at a time; you document it with a Certificate of Coverage.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "SSA online CoC request",
+                            "note": "or mail"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "CRA CPT56 application",
+                            "note": "for CPP certificate"
+                        }
+                    ]
+                },
+                "why": "Avoids double FICA/CPP/QPP; the agreement governs coverage and benefits."
+            },
+            "canada_reg_102_105": {
+                "id": "canada_reg_102_105",
+                "name": "Canada Reg. 102/105 waivers & nonresident-employer certification",
+                "description": "Canada requires withholding on employment (Reg. 102) and on services by nonresidents (Reg. 105) unless waivers/certifications apply.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "R102-R",
+                            "note": "employee treaty waiver"
+                        },
+                        {
+                            "form": "Non-resident employer certification"
+                        },
+                        {
+                            "form": "R105 waiver",
+                            "note": "for service fees"
+                        }
+                    ]
+                },
+                "why": "Prevents over-withholding when tax is exempt/reduced by treaty or by net-income basis."
+            }
+        }
+    },
+    "business_entity": {
+        "title": "Business & entity",
+        "tags": {
+            "us_shareholder_canadian_corp": {
+                "id": "us_shareholder_canadian_corp",
+                "name": "U.S. shareholder of a Canadian corporation",
+                "description": "U.S. person owns certain thresholds in a Canadian corp \u2192 U.S. information reporting and potential GILTI/Subpart F inclusions.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 5471",
+                            "note": "+ schedules with your 1040; GILTI computations as applicable"
+                        }
+                    ]
+                },
+                "why": "Sections 6038/6046 require disclosure of specified foreign corporations/CFCs."
+            },
+            "canadian_resident_us_llc": {
+                "id": "canadian_resident_us_llc",
+                "name": "Canadian resident owning a U.S. LLC (classification mismatch)",
+                "description": "Canada generally treats a U.S. LLC as a corporation, not a flow-through, which can cause timing/FTC mismatches.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "T1/T2",
+                            "note": "as applicable; consider Competent Authority relief if double tax arises"
+                        }
+                    ]
+                },
+                "why": "CRA guidance indicates LLCs are typically corporate for Canadian tax; Competent Authority can help relieve double taxation."
+            },
+            "s_corp_canadian_owner": {
+                "id": "s_corp_canadian_owner",
+                "name": "S-corporation shareholder ineligibility for Canadian owners",
+                "description": "Nonresident aliens cannot be S-corp shareholders; a Canadian nonresident owner breaks S status.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "N/A for the owner",
+                            "note": "corporate filings change if S election fails"
+                        }
+                    ]
+                },
+                "why": "IRC \u00a71361 explicitly bars nonresident alien shareholders."
+            },
+            "canadian_gst_hst": {
+                "id": "canadian_gst_hst",
+                "name": "Canadian GST/HST registration (place-of-supply)",
+                "description": "Non-resident sellers doing business in Canada may need GST/HST registration; tax applies using place-of-supply rules.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "GST/HST registration"
+                        },
+                        {
+                            "form": "ongoing GST/HST returns"
+                        }
+                    ]
+                },
+                "why": "CRA rules require registration/collection if you carry on business in Canada or make taxable supplies deemed made in Canada."
+            },
+            "us_state_sales_tax": {
+                "id": "us_state_sales_tax",
+                "name": "U.S. state sales/use tax nexus (for Canadians selling to the U.S.)",
+                "description": "Economic nexus (post-Wayfair) can create state sales tax duties even without physical presence.",
+                "forms": {
+                    "state": [
+                        {
+                            "form": "Seller registrations/returns",
+                            "note": "as applicable"
+                        }
+                    ]
+                },
+                "why": "State law-varies; check thresholds in each state."
+            }
+        }
+    },
+    "real_estate": {
+        "title": "Real estate",
+        "tags": {
+            "canadian_us_rental": {
+                "id": "canadian_us_rental",
+                "name": "Canadian resident owning U.S. rental property",
+                "description": "A Canadian resident landlord has U.S. rental income. They can elect net-income treatment.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040-NR",
+                            "note": "with Schedule E; possible \u00a7871(d) election to treat rent as ECI; provide W-8ECI to payers if applicable"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1",
+                            "note": "worldwide income with FTC"
+                        }
+                    ]
+                },
+                "why": "Nonresidents are taxed in the U.S. on U.S.-source income; election allows deductions vs. 30% gross. (W-8ECI is the ECI documentation.)"
+            },
+            "us_person_canadian_rental": {
+                "id": "us_person_canadian_rental",
+                "name": "U.S. person/nonresident with Canadian rental (Section 216)",
+                "description": "Nonresidents of Canada earning Canadian rent can file a Section 216 return to be taxed on net income.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "Section 216 return"
+                        },
+                        {
+                            "form": "NR6",
+                            "note": "to withhold on net"
+                        },
+                        {
+                            "form": "NR4",
+                            "note": "annual slip by agent"
+                        }
+                    ]
+                },
+                "why": "Part XIII withholding is 25% of gross unless NR6 approved; 216 return trues up on net."
+            },
+            "sale_us_property_nonresident": {
+                "id": "sale_us_property_nonresident",
+                "name": "Sale of U.S. real property (non-resident)",
+                "description": "FIRPTA withholding (generally 15%) on gross sale price; final U.S. tax determined on 1040-NR.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Forms 8288/8288-A",
+                            "note": "withholding"
+                        },
+                        {
+                            "form": "8288-B",
+                            "note": "optional withholding certificate to reduce/waive"
+                        },
+                        {
+                            "form": "1040-NR",
+                            "note": "to report gain"
+                        }
+                    ]
+                },
+                "why": "FIRPTA ensures collection from nonresidents; the return calculates the actual tax due/refund."
+            },
+            "sale_canadian_property_nonresident": {
+                "id": "sale_canadian_property_nonresident",
+                "name": "Sale of Canadian real property (non-resident / U.S. person)",
+                "description": "Nonresidents selling taxable Canadian property must obtain a clearance certificate; otherwise the buyer must withhold.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "T2062",
+                            "note": "and related T2062A for clearance"
+                        },
+                        {
+                            "form": "final nonresident return",
+                            "note": "to report the sale"
+                        }
+                    ]
+                },
+                "why": "CRA requires withholding/clearance to secure tax on dispositions by nonresidents."
+            },
+            "cross_border_principal_residence": {
+                "id": "cross_border_principal_residence",
+                "name": "Cross-border principal residence / U.S. \u00a7121 coordination",
+                "description": "U.S. citizens/residents may exclude home-sale gain (up to $250k/$500k) under \u00a7121; Canada has a principal residence designation (T2091).",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 8949/Schedule D",
+                            "note": "if reporting; follow Topic 701 guidance for \u00a7121"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "Schedule 3 and T2091(IND)",
+                            "note": "to designate principal residence"
+                        }
+                    ]
+                },
+                "why": "Ensures each country's home-sale rules are applied and disclosures made."
+            },
+            "local_vacancy_speculation": {
+                "id": "local_vacancy_speculation",
+                "name": "Local vacancy/speculation taxes (Canada)",
+                "description": "Provincial/municipal vacancy taxes may apply (e.g., BC Speculation & Vacancy Tax; Vancouver Empty Homes Tax), separate from income tax.",
+                "forms": {
+                    "bc": [
+                        {
+                            "form": "BC SVT: Annual declaration"
+                        }
+                    ],
+                    "vancouver": [
+                        {
+                            "form": "Vancouver EHT: Annual property status declaration"
+                        }
+                    ]
+                },
+                "why": "Compliance is required even if you owe no income tax; penalties are significant."
+            },
+            "underused_housing_tax": {
+                "id": "underused_housing_tax",
+                "name": "Underused Housing Tax (UHT)",
+                "description": "Federal 1% tax that can require filings by certain owners of Canadian residential property (including some Canadian corps/trusts) even when no tax is due.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "UHT-2900 annual return"
+                        }
+                    ]
+                },
+                "why": "Filing obligations exist for many non-\"excluded owners\"; failure to file triggers penalties."
+            }
+        }
+    },
+    "investments_financial": {
+        "title": "Investments & financial accounts",
+        "tags": {
+            "us_investment_income_canadian": {
+                "id": "us_investment_income_canadian",
+                "name": "U.S. investment income received by a Canadian resident",
+                "description": "U.S. payers withhold on dividends/interest, generally reduced by treaty when you certify eligibility.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "W-8BEN/W-8BEN-E",
+                            "note": "provide to payer"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1",
+                            "note": "with foreign tax credit"
+                        }
+                    ]
+                },
+                "why": "Treaty Articles X/XI reduce withholding; W-8 proves status/benefits."
+            },
+            "canadian_investment_income_us": {
+                "id": "canadian_investment_income_us",
+                "name": "Canadian investment income received by a U.S. person/nonresident",
+                "description": "Canadian payers withhold (default 25%) reduced by treaty when eligibility is certified.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "NR4",
+                            "note": "payer issues; recipient may give NR301 to claim treaty rate"
+                        }
+                    ],
+                    "us": [
+                        {
+                            "form": "1040/1040-NR",
+                            "note": "report and claim FTC if applicable (Form 1116)"
+                        }
+                    ]
+                },
+                "why": "Documentation applies the treaty rate; your return reconciles and credits tax."
+            },
+            "pfic_reporting": {
+                "id": "pfic_reporting",
+                "name": "PFIC reporting for Canadian funds",
+                "description": "Many Canadian mutual funds/ETFs are PFICs to the U.S.; detailed annual reporting and potential punitive tax apply.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 8621",
+                            "note": "for each PFIC annually"
+                        }
+                    ]
+                },
+                "why": "U.S. anti-deferral rules require PFIC disclosure and income calculations."
+            },
+            "cross_border_financial_accounts": {
+                "id": "cross_border_financial_accounts",
+                "name": "Cross-border financial accounts (reporting)",
+                "description": "Certain non-U.S. (for U.S. persons) or non-Canadian (for Canadian residents) financial assets trigger information reporting.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "FBAR (FinCEN 114)",
+                            "note": "if aggregate non-U.S. accounts > $10,000"
+                        },
+                        {
+                            "form": "Form 8938 (FATCA)",
+                            "note": "if over thresholds"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1135",
+                            "note": "if specified foreign property \u2265 CAD $100,000 cost"
+                        }
+                    ]
+                },
+                "why": "Separate legal regimes (BSA/FATCA/ITAR) require disclosure; penalties for non-filing are steep."
+            },
+            "withholding_documentation": {
+                "id": "withholding_documentation",
+                "name": "Withholding documentation maintenance",
+                "description": "Keep the right W-8/W-9/NR forms on file with payers to ensure correct withholding/reporting.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "W-9",
+                            "note": "U.S. persons"
+                        },
+                        {
+                            "form": "W-8BEN",
+                            "note": "individuals"
+                        },
+                        {
+                            "form": "W-8BEN-E",
+                            "note": "entities"
+                        },
+                        {
+                            "form": "W-8ECI",
+                            "note": "ECI"
+                        }
+                    ]
+                },
+                "why": "Payers rely on these to apply treaty rates, avoid backup withholding, and report correctly."
+            }
+        }
+    },
+    "retirement_benefits": {
+        "title": "Retirement, benefits & savings",
+        "tags": {
+            "cross_border_retirement_plans": {
+                "id": "cross_border_retirement_plans",
+                "name": "Cross-border retirement plans (RRSP/RRIF/401(k)/IRA)",
+                "description": "Treaty Article XVIII and Rev. Proc. 2014-55 coordinate deferral/recognition and allow U.S. deferral for RRSP/RRIF without Form 8891.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Report income only when distributed",
+                            "note": "per rules; information filings as applicable"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "Normal T1 reporting",
+                            "note": "of U.S. plan income per domestic/treaty rules"
+                        }
+                    ]
+                },
+                "why": "Treaty aligns timing; Rev. Proc. 2014-55 provides automatic U.S. deferral for RRSP/RRIF."
+            },
+            "tfsa_resp_us_person": {
+                "id": "tfsa_resp_us_person",
+                "name": "TFSA/RESP held by a U.S. person - U.S. reporting",
+                "description": "These accounts are not covered by Rev. Proc. 2014-55; many fact patterns treat them as foreign trusts (or specified foreign financial assets) for U.S. reporting.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 3520/3520-A",
+                            "note": "often owner/beneficiary reporting"
+                        },
+                        {
+                            "form": "FBAR/8938",
+                            "note": "if thresholds met"
+                        }
+                    ]
+                },
+                "why": "Form instructions require reporting for U.S. owners/beneficiaries of foreign trusts; Rev. Proc. 2020-17 exempts some tax-favored foreign trusts-check eligibility."
+            },
+            "cross_border_social_benefits": {
+                "id": "cross_border_social_benefits",
+                "name": "Cross-border social benefits",
+                "description": "Taxation of CPP/OAS/U.S. Social Security is set by Article XVIII and subsequent guidance.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040",
+                            "note": "with appropriate inclusion/exclusions for Canadian pensions/annuities"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1",
+                            "note": "with treaty treatment for U.S. Social Security"
+                        }
+                    ]
+                },
+                "why": "The treaty caps withholding and coordinates which country taxes the benefit."
+            },
+            "cross_border_pension_rollovers": {
+                "id": "cross_border_pension_rollovers",
+                "name": "Cross-border pension rollovers/contributions",
+                "description": "Some cross-border pension contributions receive treaty relief (deductions/deferrals) if conditions are met.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "Follow CRA guidance",
+                            "note": "to request treaty relief on contributions"
+                        }
+                    ],
+                    "us": [
+                        {
+                            "form": "1040 reporting",
+                            "note": "with treaty position if needed"
+                        }
+                    ]
+                },
+                "why": "Treaty seeks symmetry so workers aren't penalized when working temporarily in the other country."
+            }
+        }
+    },
+    "equity_compensation": {
+        "title": "Equity compensation",
+        "tags": {
+            "equity_cross_border_workdays": {
+                "id": "equity_cross_border_workdays",
+                "name": "Equity comp with cross-border workdays",
+                "description": "RSUs/RSAs/options are allocated by where you performed services during the vest/gain period; Article XV sourcing drives tax and FTC.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "1040/1040-NR"
+                        },
+                        {
+                            "form": "Form 1116",
+                            "note": "for FTC if double-taxed"
+                        }
+                    ],
+                    "canada": [
+                        {
+                            "form": "T1",
+                            "note": "with foreign tax credit"
+                        }
+                    ]
+                },
+                "why": "Aligns equity income to work-day sourcing under the treaty."
+            },
+            "option_espp_iso_amt": {
+                "id": "option_espp_iso_amt",
+                "name": "Option/ESPP/ISO AMT review",
+                "description": "ISO exercises can trigger AMT in the U.S.; cross-border allocation still applies.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 6251 (AMT)",
+                            "note": "as applicable; 1040 and FTC mechanics for cross-border"
+                        }
+                    ]
+                },
+                "why": "AMT adds a second U.S. calculation-plan for credits in Canada/U.S."
+            }
+        }
+    },
+    "estate_gift_trusts": {
+        "title": "Estate, gift & trusts",
+        "tags": {
+            "us_estate_tax_nonresident": {
+                "id": "us_estate_tax_nonresident",
+                "name": "U.S. estate tax exposure for nonresident alien",
+                "description": "Non-U.S. citizen/nonresident owning U.S.-situated assets can face U.S. estate tax; treaty may provide relief.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 706-NA",
+                            "note": "estate of nonresident not a citizen"
+                        }
+                    ]
+                },
+                "why": "U.S. imposes estate/GST tax on U.S. situs property owned by nonresidents at death."
+            },
+            "us_gift_tax_return": {
+                "id": "us_gift_tax_return",
+                "name": "U.S. gift tax return requirement",
+                "description": "Certain gifts by U.S. persons (and some U.S.-situs gifts by nonresidents) require a gift tax return even if no tax is due.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 709"
+                        }
+                    ]
+                },
+                "why": "Tracks use of the lifetime exemption and GST allocations."
+            },
+            "cross_border_trusts": {
+                "id": "cross_border_trusts",
+                "name": "Cross-border trusts",
+                "description": "U.S. persons involved with foreign trusts (e.g., some Canadian structures) have annual reporting.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Forms 3520/3520-A"
+                        },
+                        {
+                            "form": "FBAR/FATCA",
+                            "note": "as applicable"
+                        }
+                    ]
+                },
+                "why": "U.S. anti-avoidance disclosure rules. (See also Rev. Proc. 2020-17 exceptions.)"
+            }
+        }
+    },
+    "compliance_penalties": {
+        "title": "Compliance & penalties",
+        "tags": {
+            "fbar_reporting": {
+                "id": "fbar_reporting",
+                "name": "FBAR \u2013 FinCEN 114",
+                "description": "U.S. persons must report non-U.S. accounts if the aggregate exceeded $10,000 at any time in the year.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "FinCEN 114",
+                            "note": "e-file"
+                        }
+                    ]
+                },
+                "why": "Bank Secrecy Act reporting-separate from your tax return."
+            },
+            "fatca_form_8938": {
+                "id": "fatca_form_8938",
+                "name": "FATCA \u2013 Form 8938",
+                "description": "U.S. persons must report specified foreign financial assets when thresholds are met.",
+                "forms": {
+                    "us": [
+                        {
+                            "form": "Form 8938",
+                            "note": "attach to 1040"
+                        }
+                    ]
+                },
+                "why": "FATCA disclosure-different thresholds from FBAR, and different penalties."
+            },
+            "canada_t1135": {
+                "id": "canada_t1135",
+                "name": "Canada Form T1135",
+                "description": "Canadian residents with specified foreign property \u2265 CAD $100,000 (cost) must file.",
+                "forms": {
+                    "canada": [
+                        {
+                            "form": "T1135"
+                        }
+                    ]
+                },
+                "why": "Foreign asset reporting with significant penalties if late."
+            },
+            "compliance_relief_programs": {
+                "id": "compliance_relief_programs",
+                "name": "Compliance relief programs",
+                "description": "If prior years were missed, both countries have programs (e.g., IRS Streamlined, CRA VDP) to correct filings and mitigate penalties.",
+                "forms": {
+                    "various": [
+                        {
+                            "form": "Varies by program",
+                            "note": "tailored submissions"
+                        }
+                    ]
+                },
+                "why": "Formal pathways to come into compliance."
+            }
+        }
+    }
+}
