@@ -1,3 +1,6 @@
+"""
+Updated main.py to use the agentic framework instead of LLM-based consultant
+"""
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -9,6 +12,7 @@ from datetime import datetime
 from .models import ChatRequest, EditMessageRequest, CaseFile, MessageRole, ConversationPhase
 from .session_manager import session_manager
 from .agentic_consultant import AgenticTaxConsultant
+from .utils import contains_sensitive_info, get_sensitive_info_error_message
 from .config import settings
 
 app = FastAPI(title="Cross-Border Tax Consultant API (Agentic)")
@@ -22,6 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize agentic consultant
 tax_consultant = AgenticTaxConsultant()
 
 
@@ -34,7 +39,7 @@ def json_encoder(obj):
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "version": "agentic"}
 
 
 @app.post("/session/create")
@@ -73,8 +78,8 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=404, detail="Session not found")
 
     # Check for sensitive information
-    if _contains_sensitive_info(request.message):
-        error_msg = "Please don't share sensitive personal identifiers like SSN, SIN, or full account numbers. I can help with general tax situations without this information."
+    if contains_sensitive_info(request.message):
+        error_msg = get_sensitive_info_error_message()
         session_manager.add_message(request.session_id, MessageRole.ASSISTANT, error_msg)
         return json.loads(json.dumps({"content": error_msg, "case_file": case_file.dict()}, default=json_encoder))
 
@@ -86,17 +91,17 @@ async def chat(request: ChatRequest):
             full_response = ""
             quick_replies = []
 
+            # Generate response using agentic consultant
             async for chunk_content, chunk_quick_replies in tax_consultant.generate_response(case_file, request.message):
                 if chunk_content:
-                    full_response = chunk_content  # This is already the clean content
-                    # Capture quick_replies when they come in
+                    full_response = chunk_content
                     if chunk_quick_replies:
                         quick_replies = chunk_quick_replies
 
-                    # Stream the clean content character by character for typing effect
+                    # Stream the content character by character for typing effect
                     for char in chunk_content:
                         yield f"data: {json.dumps({'content': char, 'is_final': False})}\n\n"
-                        await asyncio.sleep(0.01)
+                        await asyncio.sleep(0.005)  # Slightly faster than before
 
             # Update case file with complete response
             updated_case_file = tax_consultant.update_case_file(case_file, request.message, full_response)
@@ -140,8 +145,8 @@ async def edit_message(request: EditMessageRequest):
         raise HTTPException(status_code=404, detail="Session or message not found")
 
     # Check for sensitive information
-    if _contains_sensitive_info(request.new_content):
-        error_msg = "Please don't share sensitive personal identifiers like SSN, SIN, or full account numbers. I can help with general tax situations without this information."
+    if contains_sensitive_info(request.new_content):
+        error_msg = get_sensitive_info_error_message()
         session_manager.add_message(request.session_id, MessageRole.ASSISTANT, error_msg)
         return json.loads(json.dumps({
             "content": error_msg,
@@ -158,14 +163,13 @@ async def edit_message(request: EditMessageRequest):
             async for chunk_content, chunk_quick_replies in tax_consultant.generate_response(case_file, request.new_content):
                 if chunk_content:
                     full_response = chunk_content
-                    # Capture quick_replies when they come in
                     if chunk_quick_replies:
                         quick_replies = chunk_quick_replies
 
-                    # Stream the clean content character by character for typing effect
+                    # Stream the content character by character for typing effect
                     for char in chunk_content:
                         yield f"data: {json.dumps({'content': char, 'is_final': False})}\n\n"
-                        await asyncio.sleep(0.01)
+                        await asyncio.sleep(0.005)
 
             # Update case file with complete response
             updated_case_file = tax_consultant.update_case_file(case_file, request.new_content, full_response)
@@ -208,6 +212,15 @@ async def force_final_suggestions(session_id: str):
             detail="Cannot provide final suggestions yet. Please provide more information first."
         )
 
+    # Get agent session summary for final suggestions
+    agent_summary = tax_consultant.get_agent_session_summary(case_file)
+
+    if not agent_summary or not agent_summary.get("forms_analysis_completed"):
+        raise HTTPException(
+            status_code=400,
+            detail="Agent analysis not complete. Please continue the conversation first."
+        )
+
     # Force phase to final suggestions
     case_file.conversation_phase = ConversationPhase.FINAL_SUGGESTIONS
     session_manager.update_session(session_id, case_file)
@@ -244,20 +257,6 @@ async def force_final_suggestions(session_id: str):
             "Content-Type": "text/event-stream",
         }
     )
-
-
-def _contains_sensitive_info(message: str) -> bool:
-    sensitive_patterns = [
-        r'\b\d{3}-\d{2}-\d{4}\b',  # SSN format
-        r'\b\d{9}\b',              # 9-digit numbers (potential SIN/SSN)
-        r'\b\d{3}\s\d{3}\s\d{3}\b', # SIN format with spaces
-    ]
-
-    import re
-    for pattern in sensitive_patterns:
-        if re.search(pattern, message):
-            return True
-    return False
 
 
 @app.get("/session/{session_id}/debug")

@@ -317,32 +317,6 @@ body {
   margin-bottom: 0;
 }
 
-.summary-section h4 {
-  margin: 0 0 0.5rem 0;
-  color: #374151;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.summary-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.summary-list li {
-  background: #f3f4f6;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.summary-list li:last-child {
-  margin-bottom: 0;
-}
 
 .phase-indicator {
   background: white;
@@ -619,4 +593,35 @@ body {
   background: #e5e7eb;
   border-color: #9ca3af;
   color: #374151;
+}
+
+/* Tag logging styles */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-item {
+  display: inline-block;
+}
+
+.tag-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0c4a6e;
+  border: 1px solid #0284c7;
+  border-radius: 1rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.no-tags-message {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 1rem 0;
 }

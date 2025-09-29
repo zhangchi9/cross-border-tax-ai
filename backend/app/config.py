@@ -10,7 +10,7 @@ class Settings:
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 
     # Change this line to switch between models - "openai" or "gemini"
-    AI_MODEL_PROVIDER: str = "openai"  # <-- Change this to switch models
+    AI_MODEL_PROVIDER: str = "gemini"  # <-- Change this to switch models
 
     # Model names with fallbacks for empty environment variables
     GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "gemini-1.5-flash-8b"

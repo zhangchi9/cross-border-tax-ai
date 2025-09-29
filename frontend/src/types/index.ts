@@ -21,6 +21,7 @@ export interface CaseFile {
   user_profile: UserProfile;
   jurisdictions: string[];
   income_types: string[];
+  assigned_tags: string[];  // Added for tag logging
   potential_issues: string[];
   unanswered_questions: string[];
   citations: string[];

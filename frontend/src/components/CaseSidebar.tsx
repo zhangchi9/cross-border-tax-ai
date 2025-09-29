@@ -18,14 +18,14 @@ export const CaseSidebar: React.FC<CaseSidebarProps> = ({
     return (
       <div className="sidebar">
         <div className="case-summary">
-          <h3>Case Summary</h3>
-          <p>Start a conversation to see your case information here.</p>
+          <h3>Identified Tags</h3>
+          <p>Start a conversation to see identified tax tags here.</p>
         </div>
       </div>
     );
   }
 
-  const { user_profile, conversation_phase, potential_issues } = caseFile;
+  const { assigned_tags, conversation_phase } = caseFile;
 
   return (
     <div className="sidebar">
@@ -45,76 +45,25 @@ export const CaseSidebar: React.FC<CaseSidebarProps> = ({
       </div>
 
       <div className="case-summary">
-        <h3>Case Summary</h3>
+        <h3>Identified Tags</h3>
 
-        {user_profile.countries_involved.length > 0 && (
+        {assigned_tags.length > 0 ? (
           <div className="summary-section">
-            <h4>Countries</h4>
-            <ul className="summary-list">
-              {user_profile.countries_involved.map((country, index) => (
-                <li key={index}>{country}</li>
+            <div className="tags-container">
+              {assigned_tags.map((tag, index) => (
+                <div key={index} className="tag-item">
+                  <span className="tag-badge">
+                    {tag}
+                  </span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
-        )}
-
-        {user_profile.tax_year && (
+        ) : (
           <div className="summary-section">
-            <h4>Tax Year</h4>
-            <ul className="summary-list">
-              <li>{user_profile.tax_year}</li>
-            </ul>
-          </div>
-        )}
-
-        {user_profile.sources_of_income.length > 0 && (
-          <div className="summary-section">
-            <h4>Income Sources</h4>
-            <ul className="summary-list">
-              {user_profile.sources_of_income.map((source, index) => (
-                <li key={index}>{source}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {user_profile.foreign_assets.length > 0 && (
-          <div className="summary-section">
-            <h4>Foreign Assets</h4>
-            <ul className="summary-list">
-              {user_profile.foreign_assets.map((asset, index) => (
-                <li key={index}>{asset}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {user_profile.tax_residency_status && (
-          <div className="summary-section">
-            <h4>Tax Residency</h4>
-            <ul className="summary-list">
-              <li>{user_profile.tax_residency_status}</li>
-            </ul>
-          </div>
-        )}
-
-        {user_profile.filing_status && (
-          <div className="summary-section">
-            <h4>Filing Status</h4>
-            <ul className="summary-list">
-              <li>{user_profile.filing_status}</li>
-            </ul>
-          </div>
-        )}
-
-        {potential_issues.length > 0 && (
-          <div className="summary-section">
-            <h4>Potential Issues</h4>
-            <ul className="summary-list">
-              {potential_issues.map((issue, index) => (
-                <li key={index}>{issue}</li>
-              ))}
-            </ul>
+            <p className="no-tags-message">
+              Answer questions to identify relevant tax tags for your situation.
+            </p>
           </div>
         )}
       </div>

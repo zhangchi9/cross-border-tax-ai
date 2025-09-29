@@ -44,6 +44,7 @@ class CaseFile(BaseModel):
     user_profile: UserProfile = Field(default_factory=UserProfile)
     jurisdictions: List[str] = Field(default_factory=list)
     income_types: List[str] = Field(default_factory=list)
+    assigned_tags: List[str] = Field(default_factory=list)  # Added for tag logging
     potential_issues: List[str] = Field(default_factory=list)
     unanswered_questions: List[str] = Field(default_factory=list)
     citations: List[str] = Field(default_factory=list)
