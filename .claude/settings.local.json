@@ -15,7 +15,11 @@
       "Bash(mv:*)",
       "Bash(rmdir:*)",
       "Bash(python:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(pip install:*)",
+      "Bash(timeout:*)",
+      "Bash(docker exec:*)",
+      "Bash(del debug_workflow.py test_simple_workflow.py)"
     ],
     "deny": [],
     "ask": []

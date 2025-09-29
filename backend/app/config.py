@@ -10,10 +10,10 @@ class Settings:
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 
     # Change this line to switch between models - "openai" or "gemini"
-    AI_MODEL_PROVIDER: str = "gemini"  # <-- Change this to switch models
+    AI_MODEL_PROVIDER: str = "openai"  # <-- Change this to switch models
 
     # Model names with fallbacks for empty environment variables
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "gemini-1.5-flash-8b"
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "models/gemini-1.5-flash-latest"
     OPENAI_MODEL: str = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
 
     CORS_ORIGINS: list = ["http://localhost:5173", "http://localhost:3000"]
