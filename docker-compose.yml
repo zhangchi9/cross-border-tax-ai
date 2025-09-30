@@ -18,7 +18,7 @@ services:
     volumes:
       - ./backend:/app/backend
       - /app/backend/__pycache__
-      - /app/backend/backend_eng/knowledge_cache
+      - /app/backend/science/knowledge_cache
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]

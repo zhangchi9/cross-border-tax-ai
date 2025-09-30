@@ -9,7 +9,7 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from backend_eng.services.knowledge_parser import KnowledgeBaseParser
+from science.services.knowledge_parser import KnowledgeBaseParser
 
 
 def main():

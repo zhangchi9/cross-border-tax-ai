@@ -34,11 +34,11 @@ class BaseNode:
         """
         Load knowledge base files from tax_team content
 
-        Note: Backend eng team will provide parsed JSON from markdown files
+        Note: Science team parses markdown files and caches JSON
         """
         try:
-            # Path will point to backend_eng's parsed output
-            kb_path = Path(__file__).parent.parent.parent / "backend_eng" / "knowledge_cache"
+            # Path points to science team's cached output
+            kb_path = Path(__file__).parent.parent / "knowledge_cache"
 
             # Fallback to old location if new structure not ready
             if not kb_path.exists():

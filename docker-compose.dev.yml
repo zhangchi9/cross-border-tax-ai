@@ -24,7 +24,7 @@ services:
     command: >
       bash -c "
         echo 'Parsing knowledge base...';
-        python -c 'from backend_eng.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base()';
+        python -c 'from science.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base()';
         echo 'Starting backend with auto-reload...';
         python -m uvicorn backend_eng.api.main:app --host 0.0.0.0 --port 8000 --reload
       "

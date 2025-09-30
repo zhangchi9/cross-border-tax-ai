@@ -1,0 +1,114 @@
+{
+  "gating_questions": {
+    "title": "Gating questions",
+    "description": "Initial screening questions to determine which modules apply",
+    "questions": [
+      {
+        "id": "us_person_check",
+        "question": "Are you a U.S. citizen or U.S. green-card holder?",
+        "action": "Go to Module A \u2014 Residency & Elections"
+      }
+    ]
+  },
+  "modules": {
+    "residency_elections": {
+      "id": "module_a",
+      "title": "Module A \u2014 Residency & Elections",
+      "questions": [
+        {
+          "id": "a1_substantial_presence",
+          "question": "U.S. day-count: Did you meet the U.S. Substantial Presence Test (\u2265 31 U.S. days this year and 183 weighted total using 1, 1/3, 1/6 rule)?",
+          "action": "Add tag `us_resident_substantial_presence`"
+        }
+      ]
+    },
+    "employment_states": {
+      "id": "module_b",
+      "title": "Module B \u2014 Employment & U.S. States",
+      "questions": [
+        {
+          "id": "b1_canada_to_us",
+          "question": "Work Performed While Present\n\n#### Canada \u2192 United States: On any day, did you perform work while physically in the United States?",
+          "action": "Add tag `wages_taxable_us_source`"
+        }
+      ]
+    },
+    "business_entities": {
+      "id": "module_c",
+      "title": "Module C \u2014 Business & Entities",
+      "questions": [
+        {
+          "id": "c1_us_person_canadian_corp",
+          "question": "U.S. person \u2192 Canadian company: As a U.S. person, did you own (directly/indirectly) \u2265 10% of a Canadian corporation or otherwise control it?",
+          "action": "Add tag `us_shareholder_canadian_corp`"
+        }
+      ]
+    },
+    "real_estate": {
+      "id": "module_d",
+      "title": "Module D \u2014 Real Estate",
+      "questions": [
+        {
+          "id": "d1_canadian_us_rental",
+          "question": "Canada \u2192 United States (rental): Are you a Canadian resident who owns U.S. rental property (including short-term rentals)?",
+          "action": "Add tag `canadian_resident_us_rental`"
+        }
+      ]
+    },
+    "investments_financial": {
+      "id": "module_e",
+      "title": "Module E \u2014 Investments & Financial Assets",
+      "questions": [
+        {
+          "id": "e1_canada_us_income",
+          "question": "Canada \u2192 United States income: As a Canadian resident, did you receive U.S.-source dividends, interest, or royalties this year?",
+          "action": "Add tag `us_investment_income_canadian_resident`"
+        }
+      ]
+    },
+    "pensions_savings": {
+      "id": "module_f",
+      "title": "Module F \u2014 Pensions, Savings & Social Benefits",
+      "questions": [
+        {
+          "id": "f1_cross_border_retirement",
+          "question": "Cross-border retirement plans: Do you hold/contribute to RRSP/RRIF, 401(k), or IRA across the border, or did you take distributions this year?",
+          "action": "Add tag `cross_border_retirement_plans`"
+        }
+      ]
+    },
+    "equity_compensation": {
+      "id": "module_g",
+      "title": "Module G \u2014 Equity Compensation",
+      "questions": [
+        {
+          "id": "g1_cross_border_workdays",
+          "question": "Cross-border workdays: Do your options/RSUs/ESPP have grant/vest/exercise/sale periods that include workdays in both the United States and Canada?",
+          "action": "Add tag `equity_compensation_cross_border_workdays`"
+        }
+      ]
+    },
+    "estates_gifts_trusts": {
+      "id": "module_h",
+      "title": "Module H \u2014 Estates, Gifts & Trusts",
+      "questions": [
+        {
+          "id": "h1_estate_exposure",
+          "question": "Estate exposure (Canada \u2192 U.S.): As a Canadian (non-U.S. resident), do you own U.S.-situs assets (U.S. real estate, U.S. company shares, certain U.S. financial assets) that could face U.S. estate tax?",
+          "action": "Add tag `us_estate_tax_exposure_nonresident`"
+        }
+      ]
+    },
+    "reporting_cleanup": {
+      "id": "module_i",
+      "title": "Module I \u2014 Reporting & Cleanup",
+      "questions": [
+        {
+          "id": "i1_fbar",
+          "question": "FBAR (U.S. persons): If you are a U.S. person, did your non-U.S. accounts (including Canadian) total over USD $10,000 at any time this year?",
+          "action": "Add tag `fbar_foreign_account_reporting`"
+        }
+      ]
+    }
+  }
+}

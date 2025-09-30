@@ -1,0 +1,484 @@
+{
+  "tag_definitions": {
+    "us_person_worldwide_filing": {
+      "id": "us_person_worldwide_filing",
+      "name": "U.S. person (citizen/green-card holder) - worldwide U.S. filing",
+      "description": "You are a U.S. citizen or U.S. lawful permanent resident (green-card holder). The U.S. taxes you on worldwide income each year, regardless of where you live. You generally use the foreign tax credit to relieve double taxation; foreign asset/account reporting may also apply.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Annual U.S. individual income tax return reporting worldwide income"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Claim credit for income tax paid to Canada to mitigate double tax"
+          },
+          {
+            "form": "Form 8938",
+            "note": "Report specified foreign financial assets if thresholds are met (FATCA)"
+          },
+          {
+            "form": "FinCEN Form 114 (FBAR)",
+            "note": "Report non-U.S. financial accounts if aggregate balance exceeds USD $10,000 at any time"
+          }
+        ]
+      },
+      "why": "U.S. persons must report worldwide income on Form 1040; Form 1116 prevents double taxation. Form 8938 and FBAR satisfy foreign asset/account disclosure when thresholds are met."
+    },
+    "canadian_tax_resident_worldwide_filing": {
+      "id": "canadian_tax_resident_worldwide_filing",
+      "name": "Canadian tax resident (worldwide Canadian filing)",
+      "description": "You are a resident of Canada for tax purposes (factual or deemed). Canada taxes residents on worldwide income; foreign tax credits may be claimed for U.S. taxes paid. Foreign asset reporting may also apply.",
+      "forms": {
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Annual Canadian individual income tax return reporting worldwide income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Claim federal foreign tax credit for U.S. income taxes paid"
+          },
+          {
+            "form": "Form T1135",
+            "note": "Report specified foreign property if cost amount exceeded CAD $100,000 at any time (Foreign income verification statement)"
+          }
+        ]
+      },
+      "why": "Canadian residents report worldwide income on the T1; Schedule T2209 provides federal foreign tax credit relief for U.S.-taxed income. T1135 fulfills foreign asset disclosure when thresholds are met."
+    },
+    "us_resident_substantial_presence": {
+      "id": "us_resident_substantial_presence",
+      "name": "U.S. resident by substantial presence test",
+      "description": "You spent enough days physically in the U.S. this year (weighted 3-year formula) to be treated as a U.S. tax resident. You file a full U.S. resident return unless you qualify for an exception (e.g., closer connection).",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Annual U.S. individual income tax return (or Form 1040-NR if claiming an exception)"
+          },
+          {
+            "form": "Form 8840",
+            "note": "Closer Connection Exception to Substantial Presence Test (if claiming nonresident exception)"
+          }
+        ]
+      },
+      "why": "Establishes your U.S. tax status; Form 8840 is required to claim the closer-connection exception to SPT."
+    },
+    "snowbird_closer_connection": {
+      "id": "snowbird_closer_connection",
+      "name": "Snowbird with closer connection to Canada (Form 8840)",
+      "description": "You were in the U.S. enough days to otherwise meet the Substantial Presence Test but keep stronger ties to Canada and qualify to be taxed as a U.S. nonresident.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 8840",
+            "note": "Stand-alone if no 1040-NR is required, or attached to 1040-NR if you must file"
+          }
+        ]
+      },
+      "why": "Discloses the treaty/closer-connection facts so the IRS accepts nonresident status."
+    },
+    "residency_change_dual_status": {
+      "id": "residency_change_dual_status",
+      "name": "Residency change / dual-status year",
+      "description": "You became or ceased to be a U.S. resident mid-year (or vice-versa for Canada). This triggers departure tax rules in Canada and dual-status filing in the U.S.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Dual-status statement attached"
+          },
+          {
+            "form": "Form 8833",
+            "note": "Treaty-based return position disclosure"
+          },
+          {
+            "form": "Form 1040-NR",
+            "note": "For nonresident portion of year"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "With emigration/immigration disclosure"
+          },
+          {
+            "form": "Form T1161",
+            "note": "List of properties by an emigrant"
+          },
+          {
+            "form": "Schedule 3",
+            "note": "Capital gains/losses (for departure tax)"
+          }
+        ]
+      },
+      "why": "Both countries tax differently based on residency status; departure from Canada may trigger deemed disposition tax."
+    },
+    "treaty_based_position": {
+      "id": "treaty_based_position",
+      "name": "Treaty-based position disclosure (Form 8833 likely required)",
+      "description": "You are claiming a treaty-based position that overrides or modifies U.S. tax law (e.g., Article IV tie-breaker, Article XV short-stay wage exemption, or closer-connection claim).",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 8833",
+            "note": "Treaty-Based Return Position Disclosure (required for most treaty positions)"
+          }
+        ]
+      },
+      "why": "The IRS requires disclosure when you take a position based on a tax treaty that reduces U.S. tax."
+    },
+    "wages_taxable_us_source": {
+      "id": "wages_taxable_us_source",
+      "name": "Wages taxable in the United States based on U.S. workdays (source-country wages)",
+      "description": "You performed work while physically present in the United States. Those wages are generally U.S.-source income subject to U.S. taxation.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040 or 1040-NR",
+            "note": "Report U.S.-source wages"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Foreign tax credit if also taxed by Canada (for U.S. persons/residents)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report employment income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit for U.S. taxes paid"
+          }
+        ]
+      },
+      "why": "Source-country taxation applies to wages earned while physically present in that country."
+    },
+    "wages_taxable_canada_source": {
+      "id": "wages_taxable_canada_source",
+      "name": "Wages taxable in Canada based on Canadian workdays (source-country wages)",
+      "description": "You performed work while physically present in Canada. Those wages are generally Canadian-source income subject to Canadian taxation.",
+      "forms": {
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report Canadian employment income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit if also taxed by U.S."
+          }
+        ],
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report worldwide income (if U.S. person)"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Foreign tax credit for Canadian taxes paid"
+          }
+        ]
+      },
+      "why": "Source-country taxation applies to wages earned while physically present in that country."
+    },
+    "short_stay_treaty_exemption_us": {
+      "id": "short_stay_treaty_exemption_us",
+      "name": "Short-stay treaty exemption for wages (United States)",
+      "description": "You qualify for the treaty short-stay exemption under Article XV (\u2264183 days, non-U.S. employer, not borne by U.S. PE). U.S. wages may be exempt from U.S. taxation.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 8833",
+            "note": "Treaty-based return position disclosure"
+          },
+          {
+            "form": "Form W-4",
+            "note": "Claim exemption from withholding with employer"
+          }
+        ]
+      },
+      "why": "Treaty exemption must be disclosed to IRS; withholding exemption claimed with employer."
+    },
+    "short_stay_treaty_exemption_canada": {
+      "id": "short_stay_treaty_exemption_canada",
+      "name": "Short-stay treaty exemption for wages (Canada)",
+      "description": "You qualify for the treaty short-stay exemption under Article XV (\u2264183 days, non-Canadian employer, not borne by Canadian PE). Canadian wages may be exempt from Canadian taxation.",
+      "forms": {
+        "ca": [
+          {
+            "form": "Form R105",
+            "note": "Request for waiver of Canadian tax withholding"
+          }
+        ]
+      },
+      "why": "Treaty exemption allows you to request waiver of Canadian withholding on wages."
+    },
+    "remote_work_canada_for_us_employer": {
+      "id": "remote_work_canada_for_us_employer",
+      "name": "Remote work performed in Canada for U.S. employer (sourcing & FTC coordination)",
+      "description": "You work remotely from Canada for a U.S. employer. Canada sources and taxes this income; U.S. may also tax depending on your status.",
+      "forms": {
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report employment income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit (if applicable)"
+          }
+        ],
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report income (if U.S. person)"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Foreign tax credit for Canadian taxes paid"
+          }
+        ]
+      },
+      "why": "Remote work is typically sourced where services are performed (Canada), requiring FTC coordination."
+    },
+    "remote_work_us_for_canada_employer": {
+      "id": "remote_work_us_for_canada_employer",
+      "name": "Remote work performed in the United States for Canadian employer (sourcing & FTC coordination)",
+      "description": "You work remotely from the U.S. for a Canadian employer. U.S. sources and taxes this income; Canada may also tax depending on your status.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040 or 1040-NR",
+            "note": "Report employment income"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Foreign tax credit (if applicable)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report income (if Canadian resident)"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit for U.S. taxes paid"
+          }
+        ]
+      },
+      "why": "Remote work is typically sourced where services are performed (U.S.), requiring FTC coordination."
+    },
+    "state_convenience_employer_exposure": {
+      "id": "state_convenience_employer_exposure",
+      "name": "State convenience-of-employer exposure",
+      "description": "Certain U.S. states (NY, CT, DE, NE, PA, AR) tax wages based on where your employer is located, not where you work. This can create exposure even if you're working remotely from another state or Canada.",
+      "forms": {
+        "us": [
+          {
+            "form": "State Income Tax Return",
+            "note": "For the convenience-of-employer state (e.g., NY IT-201)"
+          }
+        ]
+      },
+      "why": "These states have non-conforming rules that may override federal treaty protections."
+    },
+    "state_nonconformity_treaty_ftc": {
+      "id": "state_nonconformity_treaty_ftc",
+      "name": "State nonconformity with treaty/FTC",
+      "description": "Your U.S. state income tax return may not follow federal treaty rules or foreign tax credit calculations, creating additional state tax liability.",
+      "forms": {
+        "us": [
+          {
+            "form": "State Income Tax Return",
+            "note": "Check state-specific FTC and treaty conformity rules"
+          }
+        ]
+      },
+      "why": "States are not bound by federal tax treaties and have their own FTC rules."
+    },
+    "social_security_totalization": {
+      "id": "social_security_totalization",
+      "name": "Social security Totalization & certificate of coverage",
+      "description": "The U.S.-Canada Totalization Agreement prevents double social security taxation. You need a certificate of coverage to prove which country's system covers you.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form SSA-1945",
+            "note": "Application for certificate of coverage (U.S. coverage)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "CPP/QPP Certificate of Coverage",
+            "note": "Request from Service Canada"
+          }
+        ]
+      },
+      "why": "Certificate prevents double payment of CPP/EI and FICA taxes."
+    },
+    "us_shareholder_canadian_corp": {
+      "id": "us_shareholder_canadian_corp",
+      "name": "U.S. shareholder of Canadian corporation (Forms 5471; GILTI/Subpart F)",
+      "description": "As a U.S. person owning \u226510% of a Canadian corporation, you have extensive U.S. reporting requirements including potential GILTI (Global Intangible Low-Taxed Income) and Subpart F income inclusion.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 5471",
+            "note": "Information return of U.S. persons with respect to certain foreign corporations"
+          },
+          {
+            "form": "Form 8992",
+            "note": "U.S. shareholder calculation of GILTI"
+          },
+          {
+            "form": "Form 8993",
+            "note": "Section 250 deduction for GILTI"
+          },
+          {
+            "form": "Form 1040 Schedule 3",
+            "note": "Report additional income"
+          }
+        ]
+      },
+      "why": "U.S. tax law requires extensive reporting and may tax corporate earnings before distribution."
+    },
+    "canadian_resident_us_llc": {
+      "id": "canadian_resident_us_llc",
+      "name": "Canadian resident owning U.S. LLC (entity classification mismatch planning)",
+      "description": "As a Canadian resident owning a U.S. LLC, there's a classification mismatch: U.S. treats it as transparent (pass-through), Canada may treat it as a corporation. This requires careful tax planning.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040-NR",
+            "note": "Report U.S.-source income (if LLC has U.S. operations)"
+          },
+          {
+            "form": "Form 1065",
+            "note": "U.S. partnership return (if multi-member LLC)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report income"
+          },
+          {
+            "form": "T1134",
+            "note": "Information return relating to controlled and not-controlled foreign affiliates"
+          },
+          {
+            "form": "T2",
+            "note": "Corporate tax return (if LLC elected corporate treatment in Canada)"
+          }
+        ]
+      },
+      "why": "Classification mismatch can cause timing differences and potential double taxation without proper planning."
+    },
+    "s_corp_shareholder_ineligibility": {
+      "id": "s_corp_shareholder_ineligibility",
+      "name": "S-corporation shareholder ineligibility for Canadian owners (planning required)",
+      "description": "Canadian residents generally cannot be shareholders of U.S. S-corporations. If you become a Canadian resident while owning S-corp shares, the election may terminate.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1120S",
+            "note": "S-corporation return (may need to convert to C-corp)"
+          },
+          {
+            "form": "Form 2553",
+            "note": "Election to be treated as S-corporation (potential termination)"
+          }
+        ]
+      },
+      "why": "S-corp eligibility rules require all shareholders to be U.S. persons; Canadian residency terminates the election."
+    },
+    "canadian_gst_hst_registration": {
+      "id": "canadian_gst_hst_registration",
+      "name": "Canadian GST/HST registration (place-of-supply rules)",
+      "description": "If you make taxable supplies to Canadian customers exceeding CAD $30,000, you must register for and collect GST/HST.",
+      "forms": {
+        "ca": [
+          {
+            "form": "Form RC1",
+            "note": "GST/HST registration"
+          },
+          {
+            "form": "GST/HST Return",
+            "note": "Filed monthly, quarterly, or annually depending on revenue"
+          }
+        ]
+      },
+      "why": "Canadian law requires businesses making taxable supplies to Canadian customers to register for GST/HST."
+    },
+    "us_state_sales_tax_nexus": {
+      "id": "us_state_sales_tax_nexus",
+      "name": "U.S. state sales/use tax nexus",
+      "description": "Economic nexus rules in many U.S. states require businesses to collect and remit sales tax based on sales volume or transaction count, even without physical presence.",
+      "forms": {
+        "us": [
+          {
+            "form": "State Sales Tax Registration",
+            "note": "Varies by state"
+          },
+          {
+            "form": "State Sales Tax Return",
+            "note": "Varies by state (typically monthly or quarterly)"
+          }
+        ]
+      },
+      "why": "Post-Wayfair ruling established economic nexus for sales tax obligations."
+    },
+    "fbar_foreign_account_reporting": {
+      "id": "fbar_foreign_account_reporting",
+      "name": "FBAR foreign account reporting (FinCEN 114)",
+      "description": "As a U.S. person with non-U.S. financial accounts totaling over USD $10,000 at any time during the year, you must file FBAR.",
+      "forms": {
+        "us": [
+          {
+            "form": "FinCEN Form 114",
+            "note": "Foreign Bank Account Report (filed electronically, separate from tax return)"
+          }
+        ]
+      },
+      "why": "U.S. law requires disclosure of foreign financial accounts to combat money laundering and tax evasion."
+    },
+    "compliance_relief_programs": {
+      "id": "compliance_relief_programs",
+      "name": "Compliance relief programs (IRS Streamlined / CRA Voluntary Disclosures)",
+      "description": "If you have late or missed filings, you may qualify for amnesty programs with reduced penalties.",
+      "forms": {
+        "us": [
+          {
+            "form": "Streamlined Filing Compliance Procedures",
+            "note": "For U.S. taxpayers residing outside the U.S."
+          },
+          {
+            "form": "Streamlined Domestic Offshore Procedures",
+            "note": "For U.S. taxpayers residing in the U.S."
+          },
+          {
+            "form": "Delinquent FBAR Submission Procedures",
+            "note": "For FBAR-only issues"
+          },
+          {
+            "form": "Delinquent International Information Return Submission Procedures",
+            "note": "For late Forms 5471, 8938, etc."
+          }
+        ],
+        "ca": [
+          {
+            "form": "Voluntary Disclosures Program (VDP)",
+            "note": "CRA program for voluntary disclosure of unreported income or unfiled returns"
+          }
+        ]
+      },
+      "why": "These programs allow taxpayers to come into compliance with reduced or eliminated penalties if non-compliance was non-willful."
+    }
+  }
+}

@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir -r backend_eng/requirements.txt
 COPY . .
 
 # Parse knowledge base on build
-RUN python -c "import sys; sys.path.insert(0, '/app/backend'); from backend_eng.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base(); print('Knowledge base parsed successfully')"
+RUN python -c "import sys; sys.path.insert(0, '/app/backend'); from science.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base(); print('Knowledge base parsed successfully')"
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \

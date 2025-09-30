@@ -3,7 +3,7 @@ Knowledge Base Parser
 
 Parses markdown files from tax_team/ into JSON format for science team consumption.
 
-Owner: Backend Engineering Team
+Owner: Science Team
 """
 import re
 import json
