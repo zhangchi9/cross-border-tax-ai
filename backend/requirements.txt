@@ -1,12 +1,8 @@
 fastapi
-google-generativeai
 openai
 pydantic
 uvicorn[standard]
 python-dotenv
-httpx
-tenacity
-python-multipart
 langgraph
 langchain
 langchain-google-genai

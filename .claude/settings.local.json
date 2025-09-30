@@ -19,7 +19,8 @@
       "Bash(pip install:*)",
       "Bash(timeout:*)",
       "Bash(docker exec:*)",
-      "Bash(del debug_workflow.py test_simple_workflow.py)"
+      "Bash(del debug_workflow.py test_simple_workflow.py)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

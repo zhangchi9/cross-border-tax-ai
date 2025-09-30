@@ -9,6 +9,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - PYTHONPATH=/app/backend
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - AI_MODEL_PROVIDER=${AI_MODEL_PROVIDER}
@@ -18,9 +19,15 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - ./backend:/app
-      - backend_cache:/app/__pycache__
-    command: ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+      - ./backend:/app/backend  # Live reload for development
+      - backend_cache:/app/backend/__pycache__
+    command: >
+      bash -c "
+        echo 'Parsing knowledge base...';
+        python -c 'from backend_eng.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base()';
+        echo 'Starting backend with auto-reload...';
+        python -m uvicorn backend_eng.api.main:app --host 0.0.0.0 --port 8000 --reload
+      "
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
