@@ -62,6 +62,13 @@ Thumbs.db
 coverage/
 .nyc_output
 *.lcov
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Testing
+test-results/
+*.test.log
 
 # Temporary files
 *.tmp

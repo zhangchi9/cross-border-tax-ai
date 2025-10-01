@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    container_name: tax-consultant-tests
+    environment:
+      - PYTHONPATH=/app/backend
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TEST_MODE=true
+    env_file:
+      - .env
+    volumes:
+      # Mount source code for live testing
+      - ./backend:/app/backend
+      # Mount test results directory to host
+      - ./test-results:/app/backend/test-results
+    working_dir: /app/backend
+    command: bash run_all_tests.sh
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

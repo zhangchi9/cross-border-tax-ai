@@ -1,6 +1,6 @@
 # Cross-Border Tax Consultant - Development Commands
 
-.PHONY: help build up down dev logs clean restart
+.PHONY: help build up down dev logs clean restart test test-build test-shell test-coverage test-clean
 
 # Default target
 help: ## Show this help message
@@ -55,3 +55,26 @@ setup: ## Initial setup - copy env file and build
 	@echo "For Unix/Linux/Mac users:"
 	@test -f .env || (cp .env.example .env && echo "Created .env file. Please update with your API keys.")
 	docker-compose build
+
+# Testing commands
+test: ## Run all backend tests in Docker
+	docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+
+test-build: ## Build test container
+	docker-compose -f docker-compose.test.yml build
+
+test-shell: ## Access test container shell for interactive testing
+	docker-compose -f docker-compose.test.yml run tests bash
+
+test-coverage: ## Run tests with coverage report
+	docker-compose -f docker-compose.test.yml run tests pytest --cov --cov-report=html
+
+test-specific: ## Run specific test (usage: make test-specific TEST=test_parser.py)
+	docker-compose -f docker-compose.test.yml run tests python $(TEST)
+
+test-clean: ## Clean test containers and volumes
+	docker-compose -f docker-compose.test.yml down -v
+	rm -rf test-results
+
+test-logs: ## Show test container logs
+	docker-compose -f docker-compose.test.yml logs -f

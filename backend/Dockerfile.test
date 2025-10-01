@@ -1,0 +1,44 @@
+# Test-specific Dockerfile for running all backend tests
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app/backend
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app/backend
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements files
+COPY science/requirements.txt ./science/requirements.txt
+COPY backend_eng/requirements.txt ./backend_eng/requirements.txt
+COPY requirements-test.txt ./requirements-test.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r science/requirements.txt
+RUN pip install --no-cache-dir -r backend_eng/requirements.txt
+RUN pip install --no-cache-dir -r requirements-test.txt
+
+# Copy application code
+COPY . .
+
+# Parse knowledge base for tests
+RUN python -c "import sys; sys.path.insert(0, '/app/backend'); from science.services.knowledge_parser import parse_knowledge_base; parse_knowledge_base(); print('✓ Knowledge base parsed for testing')" || echo "Warning: Knowledge base parsing failed"
+
+# Create test results directory
+RUN mkdir -p /app/backend/test-results
+
+# Create non-root user for tests
+RUN useradd --create-home --shell /bin/bash testuser \
+    && chown -R testuser:testuser /app
+
+USER testuser
+
+# Default command runs all tests
+CMD ["bash", "run_all_tests.sh"]
