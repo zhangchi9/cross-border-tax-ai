@@ -6,7 +6,171 @@
       {
         "id": "us_person_check",
         "question": "Are you a U.S. citizen or U.S. green-card holder?",
-        "action": "Go to Module A \u2014 Residency & Elections"
+        "action": "Add tag `us_person_worldwide_filing`; Go to Module A \u2014 Residency & Elections",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "canadian_resident_check",
+        "question": "For this tax year, are you a Canadian tax resident (or unsure about your residency status)?",
+        "action": "Add tag `canadian_tax_resident_worldwide_filing`; Go to Module A \u2014 Residency & Elections",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "cross_border_move",
+        "question": "Did you move between the U.S. and Canada this year, or spend significant time in the other country (e.g., >183 days)?",
+        "action": "Add tag `residency_change_dual_status`; Go to Module A \u2014 Residency & Elections",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "treaty_benefits",
+        "question": "Do you plan to claim any treaty benefits or elections (e.g., tie-breaker rules, first-year or dual-status elections)?",
+        "action": "Add tag `treaty_based_position`; Go to Module A \u2014 Residency & Elections",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "us_employment",
+        "question": "Did you earn employment or contractor income in the U.S. at any time this year?",
+        "action": "Add tag `wages_taxable_us_source`; Go to Module B \u2014 Employment & U.S. States",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "canada_employment",
+        "question": "Did you earn employment or contractor income in Canada at any time this year?",
+        "action": "Add tag `wages_taxable_canada_source`; Go to Module B \u2014 Employment & U.S. States",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "multi_state_work",
+        "question": "Did you live in one U.S. state and work in another, or work in multiple U.S. states?",
+        "action": "Add tag `state_nonconformity_treaty_ftc`; Go to Module B \u2014 Employment & U.S. States",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "business_entity",
+        "question": "Do you own or control a business or entity (sole prop, partnership, corporation, LLC/ULC) in the U.S. or Canada?",
+        "action": "Go to Module C \u2014 Business & Entities",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "foreign_corporation",
+        "question": "Do you own 10% or more of a foreign corporation/partnership or have a controlled foreign affiliate?",
+        "action": "Add tag `us_shareholder_canadian_corp`; Go to Module C \u2014 Business & Entities",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "real_estate",
+        "question": "Did you own, buy, sell, or rent out real estate (home, rental, vacation property) in the U.S. or Canada this year?",
+        "action": "Go to Module D \u2014 Real Estate",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "housing_related",
+        "question": "Do you want to claim housing-related items (principal residence, moving expenses, home office, or foreign housing exclusions/deductions)?",
+        "action": "Add tag `cross_border_principal_residence`; Go to Module D \u2014 Real Estate",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "financial_accounts",
+        "question": "Do you hold non-registered financial accounts or investments across the border (bank/brokerage accounts, ETFs/mutual funds, bonds, GICs, crypto) located in the U.S. or Canada?",
+        "action": "Add tag `cross_border_financial_accounts`; Go to Module E \u2014 Investments & Financial Assets",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "registered_accounts",
+        "question": "Do you have registered accounts or pensions (RRSP, TFSA, RESP, RDSP, 401(k), IRA) or receive government/social benefits (CPP/OAS, EI, U.S. Social Security)?",
+        "action": "Add tag `cross_border_retirement_plans`; Go to Module F \u2014 Pensions, Savings & Social Benefits",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "equity_compensation",
+        "question": "Did you receive or exercise equity compensation (RSUs, stock options, ESPP/RSAs) from a U.S. or Canadian employer, including during a cross-border move?",
+        "action": "Add tag `equity_compensation_cross_border_workdays`; Go to Module G \u2014 Equity Compensation",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "gifts_trusts",
+        "question": "Did you give or receive large gifts or inheritances, or are you a grantor/beneficiary/trustee of a trust (including Canadian trusts with U.S. reporting)?",
+        "action": "Add tag `cross_border_trusts`; Go to Module H \u2014 Estates, Gifts & Trusts",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "information_reports",
+        "question": "Do you need to file information reports or fix past issues (FBAR/FinCEN 114, IRS Form 8938, CRA T1135, PFIC Form 8621, Forms 3520/3520-A/5471/8865/8858)?",
+        "action": "Add tag `fbar_foreign_account_reporting`; Go to Module I \u2014 Reporting & Cleanup",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
+      },
+      {
+        "id": "amend_returns",
+        "question": "Do you need to amend prior-year returns or respond to tax notices/assessments from the IRS or CRA?",
+        "action": "Add tag `compliance_relief_programs`; Go to Module I \u2014 Reporting & Cleanup",
+        "quick_replies": [
+          "Yes",
+          "No"
+        ]
+      },
+      {
+        "id": "missed_filings",
+        "question": "Did you miss any required filings in prior years (e.g., late FBAR/8938/T1135) and want to use a voluntary disclosure/streamlined path?",
+        "action": "Add tag `compliance_relief_programs`; Go to Module I \u2014 Reporting & Cleanup",
+        "quick_replies": [
+          "Yes",
+          "No",
+          "Not sure"
+        ]
       }
     ]
   },
@@ -18,7 +182,40 @@
         {
           "id": "a1_substantial_presence",
           "question": "U.S. day-count: Did you meet the U.S. Substantial Presence Test (\u2265 31 U.S. days this year and 183 weighted total using 1, 1/3, 1/6 rule)?",
-          "action": "Add tag `us_resident_substantial_presence`"
+          "action": "Add tag `us_resident_substantial_presence`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "a2_snowbird",
+          "question": "Snowbird: Did you spend time in the United States this year but maintain a closer connection to Canada and intend to remain a Canadian tax resident?",
+          "action": "Add tag `snowbird_closer_connection`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "a3_residency_change",
+          "question": "Residency change: Did you start or cease Canadian or U.S. tax residency at any time this year (immigration/emigration/dual-status)?",
+          "action": "Add tag `residency_change_dual_status`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "a4_treaty_position",
+          "question": "Treaty position: Will you claim a treaty-based position that changes the default result (e.g., Article IV tie-breaker, Article XV short-stay wage exemption, or closer-connection claim)?",
+          "action": "Add tag `treaty_based_position`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -28,8 +225,99 @@
       "questions": [
         {
           "id": "b1_canada_to_us",
-          "question": "Work Performed While Present\n\n#### Canada \u2192 United States: On any day, did you perform work while physically in the United States?",
-          "action": "Add tag `wages_taxable_us_source`"
+          "question": "Canada \u2192 United States: On any day, did you perform work while physically in the United States?",
+          "action": "Add tag `wages_taxable_us_source`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "b1_us_to_canada",
+          "question": "U.S. \u2192 Canada: On any day, did you perform work while physically in Canada?",
+          "action": "Add tag `wages_taxable_canada_source`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "b2_us_workdays",
+          "question": "U.S. workdays (Canada \u2192 U.S.) meet all three? (\u2264 183 U.S. days in relevant 12-month period; employer not U.S. resident; pay not borne by a U.S. PE/fixed base)",
+          "action": "Add tag `short_stay_treaty_exemption_us`",
+          "quick_replies": [
+            "Yes - all three",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "b2_canadian_workdays",
+          "question": "Canadian workdays (U.S. \u2192 Canada) meet all three? (\u2264 183 Canadian days; employer not Canadian resident; pay not borne by a Canadian PE/fixed base)",
+          "action": "Add tag `short_stay_treaty_exemption_canada`",
+          "quick_replies": [
+            "Yes - all three",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "b3_canada_to_us",
+          "question": "Canada \u2192 U.S.: Do you perform services entirely or almost entirely in Canada for a U.S. employer?",
+          "action": "Add tag `remote_work_canada_for_us_employer`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "b3_us_to_canada",
+          "question": "U.S. \u2192 Canada: Do you perform services entirely or almost entirely in the United States for a Canadian employer?",
+          "action": "Add tag `remote_work_us_for_canada_employer`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "b4_state_rules",
+          "question": "U.S. state rules: Did a \"convenience of the employer\" state (e.g., NY/CT/DE/NE) apply to you for remote work?",
+          "action": "Add tag `state_convenience_employer_exposure`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "b5_state_filing",
+          "question": "U.S. state filing: Will you have a U.S. state income tax return where rules may differ from federal treaty/credit rules?",
+          "action": "Add tag `state_nonconformity_treaty_ftc`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "b6_social_taxes",
+          "question": "Social taxes (both directions): Will you use a certificate of coverage under the U.S.\u2013Canada Totalization Agreement to avoid double social security (CPP/EI vs FICA)?",
+          "action": "Add tag `social_security_totalization`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "b7_canada_payroll",
+          "question": "Canada payroll relief (nonresident employer): Do you need Canada Reg. 102/105 waivers or nonresident-employer certification for services performed in Canada?",
+          "action": "Add tag `canada_reg_102_105_waivers`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -40,7 +328,49 @@
         {
           "id": "c1_us_person_canadian_corp",
           "question": "U.S. person \u2192 Canadian company: As a U.S. person, did you own (directly/indirectly) \u2265 10% of a Canadian corporation or otherwise control it?",
-          "action": "Add tag `us_shareholder_canadian_corp`"
+          "action": "Add tag `us_shareholder_canadian_corp`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "c2_canadian_us_llc",
+          "question": "Canadian resident \u2192 U.S. LLC: As a Canadian resident, did you own any interest in a U.S. LLC (single- or multi-member)?",
+          "action": "Add tag `canadian_resident_us_llc`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "c3_canadian_us_s_corp",
+          "question": "Canadian owner of U.S. S-corp: Are you a Canadian owner/investor in a U.S. S-corporation (or planning to be)?",
+          "action": "Add tag `s_corp_shareholder_ineligibility`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "c4_canadian_gst_hst",
+          "question": "Canadian indirect tax: Do you likely need to register for Canadian GST/HST for sales/services to Canadian customers?",
+          "action": "Add tag `canadian_gst_hst_registration`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "c5_us_sales_tax",
+          "question": "U.S. sales/use tax: Do you have U.S. sales/use tax exposure due to economic nexus or presence in any U.S. state?",
+          "action": "Add tag `us_state_sales_tax_nexus`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -51,7 +381,69 @@
         {
           "id": "d1_canadian_us_rental",
           "question": "Canada \u2192 United States (rental): Are you a Canadian resident who owns U.S. rental property (including short-term rentals)?",
-          "action": "Add tag `canadian_resident_us_rental`"
+          "action": "Add tag `canadian_resident_us_rental`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "d2_us_canadian_rental",
+          "question": "U.S. (person/resident) \u2192 Canada (rental): Are you a U.S. person or Canadian nonresident who owns Canadian rental property (including short-term rentals)?",
+          "action": "Add tag `us_person_canadian_rental`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "d3_selling_us",
+          "question": "Selling in the U.S.: Did you (as a non-U.S. resident) sell U.S. real property this year or have a sale pending?",
+          "action": "Add tag `sale_us_real_property_nonresident`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Pending sale"
+          ]
+        },
+        {
+          "id": "d4_selling_canada",
+          "question": "Selling in Canada: Did you (as a nonresident of Canada or as a U.S. person) sell Canadian real property this year or have a sale pending?",
+          "action": "Add tag `sale_canadian_real_property_nonresident`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Pending sale"
+          ]
+        },
+        {
+          "id": "d5_home_sale",
+          "question": "Home sale rules: Was a sold property your home, and are you relying on a principal-residence / U.S. \u00a7121 exclusion?",
+          "action": "Add tag `cross_border_principal_residence`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "d6_vacancy_speculation",
+          "question": "Vacancy/speculation: Is your Canadian property subject to local vacancy/speculation/empty-homes taxes?",
+          "action": "Add tag `local_vacancy_speculation_tax`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "d7_uht",
+          "question": "UHT: Do you own Canadian residential property that may be caught by the federal Underused Housing Tax rules?",
+          "action": "Add tag `underused_housing_tax_uht`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -62,7 +454,57 @@
         {
           "id": "e1_canada_us_income",
           "question": "Canada \u2192 United States income: As a Canadian resident, did you receive U.S.-source dividends, interest, or royalties this year?",
-          "action": "Add tag `us_investment_income_canadian_resident`"
+          "action": "Add tag `us_investment_income_canadian_resident`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "e2_us_canada_income",
+          "question": "U.S. (person/resident) \u2192 Canada income: As a U.S. person or Canadian nonresident, did you receive Canadian-source investment income this year?",
+          "action": "Add tag `canadian_investment_income_us_person`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "e3_pfic",
+          "question": "PFIC (U.S. persons): As a U.S. person, did you hold Canadian mutual funds/ETFs or other non-U.S. pooled funds?",
+          "action": "Add tag `pfic_reporting_canadian_funds`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "e4_canada_to_us",
+          "question": "Canada \u2192 United States: Do you hold U.S. bank/brokerage/retirement/crypto accounts?",
+          "action": "Add tag `cross_border_financial_accounts`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "e4_us_to_canada",
+          "question": "U.S. \u2192 Canada: Do you hold Canadian bank/brokerage/retirement/crypto accounts?",
+          "action": "Add tag `cross_border_financial_accounts`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "e5_withholding_paperwork",
+          "question": "Withholding paperwork: Do you need to furnish/update W-8BEN / W-8ECI / W-9 / CRA NR forms with payers?",
+          "action": "Add tag `withholding_documentation_maintenance`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -73,7 +515,39 @@
         {
           "id": "f1_cross_border_retirement",
           "question": "Cross-border retirement plans: Do you hold/contribute to RRSP/RRIF, 401(k), or IRA across the border, or did you take distributions this year?",
-          "action": "Add tag `cross_border_retirement_plans`"
+          "action": "Add tag `cross_border_retirement_plans`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "f2_tfsa_resp",
+          "question": "TFSA/RESP (U.S. persons): Are you a U.S. person with a TFSA or RESP?",
+          "action": "Add tag `tfsa_resp_us_person`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "f3_social_benefits",
+          "question": "Social benefits while abroad: Do you receive U.S. Social Security or Canadian CPP/OAS while living in the other country?",
+          "action": "Add tag `cross_border_social_benefits`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "f4_plan_transfers",
+          "question": "Plan transfers: Do you plan to move/roll retirement funds across the border (directly or indirectly)?",
+          "action": "Add tag `cross_border_pension_transfers`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Considering"
+          ]
         }
       ]
     },
@@ -84,7 +558,22 @@
         {
           "id": "g1_cross_border_workdays",
           "question": "Cross-border workdays: Do your options/RSUs/ESPP have grant/vest/exercise/sale periods that include workdays in both the United States and Canada?",
-          "action": "Add tag `equity_compensation_cross_border_workdays`"
+          "action": "Add tag `equity_compensation_cross_border_workdays`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "g2_detail_checks",
+          "question": "Detail checks: Do you hold ISOs/NQSOs/ESPP that may require detailed sourcing or AMT checks (for ISOs)?",
+          "action": "Add tag `detailed_option_espp_iso_allocation`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -95,7 +584,31 @@
         {
           "id": "h1_estate_exposure",
           "question": "Estate exposure (Canada \u2192 U.S.): As a Canadian (non-U.S. resident), do you own U.S.-situs assets (U.S. real estate, U.S. company shares, certain U.S. financial assets) that could face U.S. estate tax?",
-          "action": "Add tag `us_estate_tax_exposure_nonresident`"
+          "action": "Add tag `us_estate_tax_exposure_nonresident`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "h2_us_gifts",
+          "question": "U.S. gifts: Are you making gifts that may require a U.S. gift tax return (you are a U.S. person making large gifts, or gifting U.S.-situs assets)?",
+          "action": "Add tag `us_gift_tax_return_requirement`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "h3_trusts",
+          "question": "Trusts with cross-border ties: Do you create, receive from, or act as trustee/beneficiary of a trust with U.S.\u2013Canada parties or assets?",
+          "action": "Add tag `cross_border_trusts`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
         }
       ]
     },
@@ -106,7 +619,41 @@
         {
           "id": "i1_fbar",
           "question": "FBAR (U.S. persons): If you are a U.S. person, did your non-U.S. accounts (including Canadian) total over USD $10,000 at any time this year?",
-          "action": "Add tag `fbar_foreign_account_reporting`"
+          "action": "Add tag `fbar_foreign_account_reporting`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "i2_fatca",
+          "question": "FATCA (U.S. persons): If you are a U.S. person, do your foreign financial assets (including Canadian) exceed Form 8938 thresholds?",
+          "action": "Add tag `fatca_form_8938_reporting`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "i3_t1135",
+          "question": "T1135 (Canadian residents): If you are a Canadian resident, did the cost of your specified foreign property (including U.S. assets) exceed CAD $100,000 at any time this year?",
+          "action": "Add tag `canada_t1135_foreign_property`",
+          "quick_replies": [
+            "Yes",
+            "No",
+            "Not sure"
+          ]
+        },
+        {
+          "id": "i4_late_filings",
+          "question": "Late filings: Do you have late or missed filings (returns, FBAR/8938/T1135, info forms) needing an amnesty/disclosure path?",
+          "action": "Add tag `compliance_relief_programs`",
+          "quick_replies": [
+            "Yes",
+            "No"
+          ]
         }
       ]
     }

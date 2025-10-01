@@ -20,7 +20,9 @@
       "Bash(timeout:*)",
       "Bash(docker exec:*)",
       "Bash(del debug_workflow.py test_simple_workflow.py)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(set PYTHONPATH=%PYTHONPATH%)",
+      "Bash(%CD%)"
     ],
     "deny": [],
     "ask": []

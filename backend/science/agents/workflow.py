@@ -7,7 +7,8 @@ This module defines the LangGraph workflow for tax consultation,
 orchestrating the flow between IntakeNode, FormsAnalysisNode, and CompletionNode.
 """
 import uuid
-from typing import Dict, Any, List, Literal
+import asyncio
+from typing import Dict, Any, List, Literal, Optional
 
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -19,27 +20,24 @@ from .nodes import IntakeNode, FormsAnalysisNode, CompletionNode
 
 def should_continue_intake(state: TaxConsultationState) -> Literal["intake", "forms_analysis"]:
     """Conditional routing from intake phase"""
-    # Check if we should transition based on having enough tags or explicit transition flag
+    # Check if we should transition based on explicit transition flag
     if state.get("should_transition", False):
         return "forms_analysis"
 
     # Auto-transition if we have enough tags (configured threshold)
+    # AND sufficient conversation to have gathered context
+    conversation_length = len(state.get("messages", []))
     if len(state.get("assigned_tags", [])) >= science_config.MIN_TAGS_FOR_TRANSITION:
-        return "forms_analysis"
+        if conversation_length >= science_config.MIN_CONVERSATION_LENGTH:
+            return "forms_analysis"
 
     # Check conversation length to prevent infinite loops
-    conversation_length = len(state.get("messages", []))
-
-    # For very short conversations (first few exchanges), always stay in intake
-    if conversation_length <= 4:
-        return "intake"
-
-    # For longer conversations without sufficient tags, stay in intake a bit more
-    if conversation_length <= 8:
-        return "intake"
-
-    # Force transition only after many messages to prevent infinite loops
-    if conversation_length >= 10:
+    # But allow for longer conversations since we have many questions (18 gating + module questions)
+    # Maximum possible conversation: 18 gating + ~45 module questions = ~63 questions
+    # Each question = 2 messages (assistant + user), so ~126 messages max
+    # We'll set a generous limit
+    if conversation_length >= 150:
+        # Force transition after very long conversation
         return "forms_analysis"
 
     # Default to continuing intake
@@ -114,10 +112,20 @@ class TaxConsultationWorkflow:
 
         return workflow
 
-    async def start_consultation(self, initial_message: str = "") -> Dict[str, Any]:
-        """Start a new consultation session"""
+    async def start_consultation(self, initial_message: str = "", session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Start a new consultation session
 
-        session_id = str(uuid.uuid4())
+        Args:
+            initial_message: Initial message from user
+            session_id: Optional session ID (auto-generated if not provided)
+
+        Returns:
+            Dict with session info and assistant response
+        """
+
+        if session_id is None:
+            session_id = str(uuid.uuid4())
+
         initial_state = create_initial_state(session_id, initial_message)
 
         # Create thread config with recursion limit
@@ -129,17 +137,28 @@ class TaxConsultationWorkflow:
         # Run the workflow
         result = await self.app.ainvoke(initial_state, config)
 
+        # Return with backward compatibility keys
+        assistant_response = result.get("assistant_response", "")
         return {
             "session_id": session_id,
-            "message": result.get("assistant_response", ""),
+            "message": assistant_response,  # Legacy key
+            "assistant_response": assistant_response,  # New key for consistency
             "quick_replies": result.get("quick_replies", []),
             "current_phase": result.get("current_phase", "intake"),
             "assigned_tags": result.get("assigned_tags", []),
-            "state": result
+            **result  # Include all state fields for backward compatibility
         }
 
     async def continue_consultation(self, session_id: str, message: str) -> Dict[str, Any]:
-        """Continue an existing consultation session"""
+        """Continue an existing consultation session
+
+        Args:
+            session_id: Session ID from start_consultation
+            message: User's message/response
+
+        Returns:
+            Dict with assistant response and updated state
+        """
 
         # Create thread config with recursion limit
         config = {
@@ -163,15 +182,18 @@ class TaxConsultationWorkflow:
         # Run the workflow
         result = await self.app.ainvoke(state, config)
 
+        # Return with backward compatibility keys
+        assistant_response = result.get("assistant_response", "")
         return {
             "session_id": session_id,
-            "message": result.get("assistant_response", ""),
+            "message": assistant_response,  # Legacy key
+            "assistant_response": assistant_response,  # New key for consistency
             "quick_replies": result.get("quick_replies", []),
             "current_phase": result.get("current_phase", "intake"),
             "assigned_tags": result.get("assigned_tags", []),
             "transition": result.get("should_transition", False),
             "forms_analysis": self._extract_forms_analysis(result) if result.get("current_phase") == "completed" else None,
-            "state": result
+            **result  # Include all state fields for backward compatibility
         }
 
     async def force_forms_analysis(self, session_id: str) -> Dict[str, Any]:
@@ -305,3 +327,130 @@ class TaxConsultationWorkflow:
             "created_at": state.get("created_at"),
             "updated_at": state.get("updated_at")
         }
+
+    async def get_session_state(self, session_id: str) -> Optional[Dict[str, Any]]:
+        """Get full session state
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Full state dict or None if session not found
+        """
+
+        config = {
+            "configurable": {"thread_id": session_id},
+            "recursion_limit": 10
+        }
+
+        current_state = await self.app.aget_state(config)
+
+        if not current_state:
+            return None
+
+        return current_state.values
+
+    async def force_transition_to_forms_analysis(self, session_id: str) -> Dict[str, Any]:
+        """Force transition to forms analysis (alias for force_forms_analysis)
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Dict with forms analysis results
+        """
+        return await self.force_forms_analysis(session_id)
+
+    # ============================================================================
+    # SYNCHRONOUS WRAPPER METHODS (for testing and non-async contexts)
+    # ============================================================================
+
+    def start_consultation_sync(self, initial_message: str = "", session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Synchronous wrapper for start_consultation
+
+        Args:
+            initial_message: Initial message from user
+            session_id: Optional session ID (auto-generated if not provided)
+
+        Returns:
+            Dict with session info and assistant response
+        """
+        return asyncio.run(self.start_consultation(initial_message, session_id))
+
+    def continue_consultation_sync(self, session_id: str, message: str) -> Dict[str, Any]:
+        """Synchronous wrapper for continue_consultation
+
+        Args:
+            session_id: Session ID from start_consultation
+            message: User's message/response
+
+        Returns:
+            Dict with assistant response and updated state
+        """
+        return asyncio.run(self.continue_consultation(session_id, message))
+
+    def force_forms_analysis_sync(self, session_id: str) -> Dict[str, Any]:
+        """Synchronous wrapper for force_forms_analysis
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Dict with forms analysis results
+        """
+        return asyncio.run(self.force_forms_analysis(session_id))
+
+    def force_transition_to_forms_analysis_sync(self, session_id: str) -> Dict[str, Any]:
+        """Synchronous wrapper for force_transition_to_forms_analysis
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Dict with forms analysis results
+        """
+        return asyncio.run(self.force_transition_to_forms_analysis(session_id))
+
+    def get_session_summary_sync(self, session_id: str) -> Optional[Dict[str, Any]]:
+        """Synchronous wrapper for get_session_summary
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Session summary dict or None
+        """
+        return asyncio.run(self.get_session_summary(session_id))
+
+    def get_session_state_sync(self, session_id: str) -> Optional[Dict[str, Any]]:
+        """Synchronous wrapper for get_session_state
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Full state dict or None
+        """
+        return asyncio.run(self.get_session_state(session_id))
+
+    def get_conversation_history_sync(self, session_id: str) -> List[Dict[str, Any]]:
+        """Synchronous wrapper for get_conversation_history
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            List of message dicts
+        """
+        return asyncio.run(self.get_conversation_history(session_id))
+
+    def debug_session_sync(self, session_id: str) -> Dict[str, Any]:
+        """Synchronous wrapper for debug_session
+
+        Args:
+            session_id: Session ID
+
+        Returns:
+            Debug info dict
+        """
+        return asyncio.run(self.debug_session(session_id))

@@ -322,6 +322,604 @@
       },
       "why": "Certificate prevents double payment of CPP/EI and FICA taxes."
     },
+    "canadian_resident_us_rental": {
+      "id": "canadian_resident_us_rental",
+      "name": "Canadian resident owning U.S. rental property",
+      "description": "As a Canadian resident, you own rental property in the United States. This creates U.S. tax filing obligations and potential withholding requirements on rental income.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040-NR",
+            "note": "U.S. nonresident income tax return reporting rental income"
+          },
+          {
+            "form": "Form W-8ECI",
+            "note": "Certificate of foreign person's claim that income is effectively connected with U.S. trade or business (to avoid 30% withholding)"
+          },
+          {
+            "form": "State Tax Return",
+            "note": "State income tax return where property is located"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report worldwide income including U.S. rental income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Claim foreign tax credit for U.S. taxes paid on rental income"
+          },
+          {
+            "form": "Form T776",
+            "note": "Statement of real estate rentals"
+          }
+        ]
+      },
+      "why": "U.S. taxes nonresidents on U.S.-source rental income; Canada taxes residents on worldwide income. Proper reporting and foreign tax credits prevent double taxation."
+    },
+    "us_person_canadian_rental": {
+      "id": "us_person_canadian_rental",
+      "name": "U.S. person owning Canadian rental property",
+      "description": "As a U.S. person, you own rental property in Canada. This creates Canadian tax filing obligations and potential withholding requirements on rental income.",
+      "forms": {
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Canadian income tax return reporting rental income (if required to file)"
+          },
+          {
+            "form": "NR4",
+            "note": "Statement of amounts paid or credited to nonresidents (for withholding purposes)"
+          },
+          {
+            "form": "Form T776",
+            "note": "Statement of real estate rentals"
+          }
+        ],
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report worldwide income including Canadian rental income"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Claim foreign tax credit for Canadian taxes paid on rental income"
+          },
+          {
+            "form": "Schedule E",
+            "note": "Supplemental income and loss (rental income)"
+          }
+        ]
+      },
+      "why": "Canada taxes nonresidents on Canadian-source rental income; U.S. taxes citizens on worldwide income. Proper reporting and foreign tax credits prevent double taxation."
+    },
+    "cross_border_principal_residence": {
+      "id": "cross_border_principal_residence",
+      "name": "Cross-border principal residence exemption",
+      "description": "You're claiming principal residence exemption on a home sale in either U.S. (\u00a7121 exclusion) or Canada (principal residence exemption), and need to coordinate with the other country's rules.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report home sale and claim \u00a7121 exclusion if applicable"
+          },
+          {
+            "form": "Form 8949",
+            "note": "Sales and other dispositions of capital assets"
+          },
+          {
+            "form": "Schedule D",
+            "note": "Capital gains and losses"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report home sale and claim principal residence exemption"
+          },
+          {
+            "form": "Schedule 3",
+            "note": "Capital gains or losses"
+          },
+          {
+            "form": "Form T2091",
+            "note": "Designation of a property as a principal residence"
+          }
+        ]
+      },
+      "why": "Both countries have principal residence exemptions, but rules differ. Proper designation and reporting ensures optimal tax treatment in both jurisdictions."
+    },
+    "sale_us_real_property_nonresident": {
+      "id": "sale_us_real_property_nonresident",
+      "name": "Sale of U.S. real property by nonresident (FIRPTA)",
+      "description": "You sold U.S. real property as a nonresident. FIRPTA requires 15% withholding on gross sales price unless you obtain a withholding certificate.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040-NR",
+            "note": "Report capital gain from U.S. real property sale"
+          },
+          {
+            "form": "Form 8288",
+            "note": "U.S. withholding tax return for dispositions by foreign persons of U.S. real property interests"
+          },
+          {
+            "form": "Form 8288-B",
+            "note": "Application for withholding certificate for dispositions by foreign persons of U.S. real property interests"
+          },
+          {
+            "form": "State Tax Return",
+            "note": "State capital gains tax return"
+          }
+        ]
+      },
+      "why": "FIRPTA (Foreign Investment in Real Property Tax Act) requires withholding and filing to ensure nonresidents pay U.S. tax on gains from U.S. real estate sales."
+    },
+    "sale_canadian_real_property_nonresident": {
+      "id": "sale_canadian_real_property_nonresident",
+      "name": "Sale of Canadian real property by nonresident (Section 116)",
+      "description": "You sold Canadian real property as a nonresident. Section 116 requires clearance certificate and withholding unless you obtain proper clearance.",
+      "forms": {
+        "ca": [
+          {
+            "form": "Form T2062",
+            "note": "Request by a non-resident of Canada for a certificate of compliance related to the disposition of taxable Canadian property"
+          },
+          {
+            "form": "Form T2062A",
+            "note": "Request by a non-resident of Canada for a certificate of compliance related to the disposition of Canadian resource or timber resource property"
+          },
+          {
+            "form": "T1 General",
+            "note": "Nonresident income tax return to report capital gain"
+          }
+        ]
+      },
+      "why": "Section 116 clearance ensures nonresidents pay Canadian tax on gains from Canadian property sales. Buyer withholds 25% of purchase price if no clearance certificate obtained."
+    },
+    "local_vacancy_speculation_tax": {
+      "id": "local_vacancy_speculation_tax",
+      "name": "Local vacancy or speculation tax (BC, Vancouver, etc.)",
+      "description": "Your Canadian property may be subject to local vacancy taxes, speculation taxes, or empty homes taxes imposed by provincial or municipal governments.",
+      "forms": {
+        "ca": [
+          {
+            "form": "BC Speculation and Vacancy Tax Declaration",
+            "note": "Annual declaration for B.C. properties"
+          },
+          {
+            "form": "Vancouver Empty Homes Tax Declaration",
+            "note": "Annual declaration for Vancouver properties"
+          },
+          {
+            "form": "Other municipal declarations",
+            "note": "Varies by jurisdiction"
+          }
+        ]
+      },
+      "why": "Provincial and municipal governments impose these taxes to address housing affordability. Annual declarations required even if exemption applies."
+    },
+    "underused_housing_tax_uht": {
+      "id": "underused_housing_tax_uht",
+      "name": "Underused Housing Tax (UHT)",
+      "description": "You own Canadian residential property that may be subject to the federal Underused Housing Tax (UHT) of 1% of property value annually.",
+      "forms": {
+        "ca": [
+          {
+            "form": "Form UHT-2900",
+            "note": "Underused Housing Tax Return and Election Form"
+          }
+        ]
+      },
+      "why": "Federal UHT applies to Canadian residential property owned by non-Canadians and certain other owners. Annual filing required even if exemption applies; penalty for late filing is $5,000 minimum."
+    },
+    "us_investment_income_canadian_resident": {
+      "id": "us_investment_income_canadian_resident",
+      "name": "U.S. investment income received by Canadian resident",
+      "description": "As a Canadian resident, you receive U.S.-source dividends, interest, or royalties. These are subject to U.S. withholding and Canadian taxation with foreign tax credit relief.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form W-8BEN",
+            "note": "Certificate of foreign status (provide to U.S. payers to claim treaty-reduced withholding rates)"
+          },
+          {
+            "form": "Form 1040-NR",
+            "note": "Only if required (certain circumstances)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report all investment income"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Claim foreign tax credit for U.S. withholding taxes"
+          },
+          {
+            "form": "T5/T3",
+            "note": "Information slips from Canadian financial institutions"
+          }
+        ]
+      },
+      "why": "U.S. withholds tax on U.S.-source investment income paid to nonresidents; Canada taxes residents on worldwide income. Treaty rates and foreign tax credits prevent double taxation."
+    },
+    "canadian_investment_income_us_person": {
+      "id": "canadian_investment_income_us_person",
+      "name": "Canadian investment income received by U.S. person",
+      "description": "As a U.S. person, you receive Canadian-source dividends, interest, or royalties. These are subject to Canadian withholding and U.S. taxation with foreign tax credit relief.",
+      "forms": {
+        "ca": [
+          {
+            "form": "Form NR301",
+            "note": "Declaration of eligibility for benefits under a tax treaty (provide to Canadian payers for reduced withholding)"
+          }
+        ],
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report all investment income"
+          },
+          {
+            "form": "Form 1116",
+            "note": "Claim foreign tax credit for Canadian withholding taxes"
+          },
+          {
+            "form": "Schedule B",
+            "note": "Interest and ordinary dividends"
+          }
+        ]
+      },
+      "why": "Canada withholds tax on Canadian-source investment income paid to nonresidents; U.S. taxes citizens on worldwide income. Treaty rates and foreign tax credits prevent double taxation."
+    },
+    "cross_border_financial_accounts": {
+      "id": "cross_border_financial_accounts",
+      "name": "Cross-border financial accounts (FBAR, FATCA, T1135 reporting)",
+      "description": "You hold financial accounts (bank, brokerage, retirement, crypto) in the other country, triggering disclosure requirements FBAR, Form 8938, and/or T1135.",
+      "forms": {
+        "us": [
+          {
+            "form": "FinCEN Form 114 (FBAR)",
+            "note": "If non-U.S. accounts exceed $10,000 at any time"
+          },
+          {
+            "form": "Form 8938",
+            "note": "If foreign financial assets exceed thresholds"
+          }
+        ],
+        "ca": [
+          {
+            "form": "Form T1135",
+            "note": "If foreign property cost exceeds CAD $100,000 at any time"
+          }
+        ]
+      },
+      "why": "Both countries require disclosure of foreign financial accounts to ensure worldwide income reporting and combat tax evasion."
+    },
+    "pfic_reporting_canadian_funds": {
+      "id": "pfic_reporting_canadian_funds",
+      "name": "PFIC reporting for Canadian mutual funds and ETFs (Form 8621)",
+      "description": "As a U.S. person, you hold Canadian mutual funds, ETFs, or other non-U.S. pooled investment funds that are classified as Passive Foreign Investment Companies (PFICs), requiring complex annual reporting.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 8621",
+            "note": "Information return by a shareholder of a passive foreign investment company (required for EACH PFIC)"
+          },
+          {
+            "form": "Form 1040",
+            "note": "Report PFIC income or gains"
+          }
+        ]
+      },
+      "why": "U.S. tax law treats PFICs punitively to discourage offshore investing. Complex reporting and unfavorable tax treatment (interest charge, no capital gains rates) unless QEF or mark-to-market election made."
+    },
+    "withholding_documentation_maintenance": {
+      "id": "withholding_documentation_maintenance",
+      "name": "Withholding documentation maintenance (W-8BEN, W-9, NR forms)",
+      "description": "You need to furnish or update withholding certificates with payers in both countries to claim treaty benefits or avoid incorrect withholding.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form W-8BEN",
+            "note": "For nonresidents receiving U.S.-source income (claim treaty benefits)"
+          },
+          {
+            "form": "Form W-9",
+            "note": "For U.S. persons receiving payments (provide TIN to payers)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "Form NR301",
+            "note": "Declaration of eligibility for treaty benefits"
+          },
+          {
+            "form": "Form R105",
+            "note": "Regulation 105 waiver application"
+          }
+        ]
+      },
+      "why": "Proper withholding documentation ensures correct withholding rates and avoids over-withholding or penalties. Forms typically expire after 3 years."
+    },
+    "cross_border_retirement_plans": {
+      "id": "cross_border_retirement_plans",
+      "name": "Cross-border retirement plans (RRSP, RRIF, 401(k), IRA)",
+      "description": "You hold or contribute to retirement accounts in both countries, requiring coordination of reporting, withholding, and tax treatment under treaty provisions.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 8891",
+            "note": "U.S. information return for beneficiaries of certain Canadian registered retirement plans (discontinued, now Form 8938)"
+          },
+          {
+            "form": "Form 8938",
+            "note": "Report RRSP/RRIF if thresholds met"
+          },
+          {
+            "form": "Form 1040",
+            "note": "Report distributions if not properly deferred under treaty"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report distributions"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit for U.S. withholding"
+          },
+          {
+            "form": "Treaty election",
+            "note": "Election to defer taxation under Article XVIII"
+          }
+        ]
+      },
+      "why": "Treaty provisions allow deferral of taxation on retirement accounts, but proper elections and reporting required. Distributions subject to withholding and coordination."
+    },
+    "cross_border_social_benefits": {
+      "id": "cross_border_social_benefits",
+      "name": "Cross-border social benefits (CPP/OAS, U.S. Social Security)",
+      "description": "You receive social security or pension benefits from one country while residing in or being a tax resident of the other country.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040 or 1040-NR",
+            "note": "Report CPP/OAS as foreign pension income"
+          },
+          {
+            "form": "Form 8833",
+            "note": "Treaty position if claiming exemption for OAS"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report U.S. Social Security benefits (85% taxable in Canada under treaty)"
+          },
+          {
+            "form": "Schedule T2209",
+            "note": "Foreign tax credit if U.S. withheld taxes"
+          }
+        ]
+      },
+      "why": "Treaty determines which country can tax social benefits and at what rate. CPP/OAS generally taxable in both countries; U.S. Social Security 85% taxable in Canada; proper reporting and credits prevent double taxation."
+    },
+    "tfsa_resp_us_person": {
+      "id": "tfsa_resp_us_person",
+      "name": "TFSA or RESP held by U.S. person",
+      "description": "As a U.S. person, you hold a Tax-Free Savings Account (TFSA) or Registered Education Savings Plan (RESP). These are NOT recognized as tax-advantaged by the U.S., creating annual reporting and taxation requirements.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 3520",
+            "note": "Annual return to report transactions with foreign trust (TFSA/RESP treated as foreign grantor trust)"
+          },
+          {
+            "form": "Form 3520-A",
+            "note": "Annual information return of foreign trust with U.S. owner"
+          },
+          {
+            "form": "Form 1040",
+            "note": "Report all income from TFSA/RESP annually (no tax-free treatment)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "TFSA/RESP contributions and withdrawals (tax-free in Canada)"
+          }
+        ]
+      },
+      "why": "U.S. does not recognize TFSA/RESP as qualified retirement plans under the treaty. All income is taxable annually to U.S. person, and complex trust reporting required. Severe penalties for non-filing."
+    },
+    "cross_border_pension_transfers": {
+      "id": "cross_border_pension_transfers",
+      "name": "Cross-border pension transfers or rollovers",
+      "description": "You plan to transfer or roll over retirement funds between U.S. and Canadian retirement accounts (e.g., 401(k) to RRSP, or vice versa).",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040",
+            "note": "Report distribution and rollover"
+          },
+          {
+            "form": "Form 5498",
+            "note": "IRA contribution information"
+          },
+          {
+            "form": "Form 8891",
+            "note": "RRSP election (if applicable)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report transfer"
+          },
+          {
+            "form": "T4RSP/T4RIF",
+            "note": "Information slip for RRSP/RRIF"
+          },
+          {
+            "form": "RC267",
+            "note": "Employee contributions to a Canadian or U.S. retirement plan"
+          }
+        ]
+      },
+      "why": "Direct transfers between U.S. and Canadian retirement accounts generally not permitted without tax consequences. Proper planning required to minimize withholding and taxes."
+    },
+    "equity_compensation_cross_border_workdays": {
+      "id": "equity_compensation_cross_border_workdays",
+      "name": "Equity compensation with cross-border workdays",
+      "description": "Your stock options, RSUs, or ESPP have grant, vest, exercise, or sale periods that span time working in both U.S. and Canada, requiring complex sourcing allocation.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 1040 or 1040-NR",
+            "note": "Report equity compensation income"
+          },
+          {
+            "form": "Form 3921",
+            "note": "Exercise of incentive stock option (ISO)"
+          },
+          {
+            "form": "Form 3922",
+            "note": "Transfer of stock acquired through ESPP"
+          },
+          {
+            "form": "Form 6251",
+            "note": "Alternative minimum tax (if ISOs)"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report equity compensation income"
+          },
+          {
+            "form": "Form T1135",
+            "note": "If holding foreign shares exceeds threshold"
+          },
+          {
+            "form": "Schedule 3",
+            "note": "Capital gains on sale"
+          }
+        ]
+      },
+      "why": "Equity compensation is sourced based on workdays in each country during vesting/earning period. Complex allocation formulas required to determine each country's taxing rights and prevent double taxation."
+    },
+    "detailed_option_espp_iso_allocation": {
+      "id": "detailed_option_espp_iso_allocation",
+      "name": "Detailed option/ESPP/ISO allocation and AMT analysis",
+      "description": "You hold incentive stock options (ISOs), non-qualified stock options (NQSOs), or participate in ESPP requiring detailed cross-border sourcing and potential AMT analysis.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 6251",
+            "note": "Alternative minimum tax (ISOs trigger AMT)"
+          },
+          {
+            "form": "Form 3921",
+            "note": "ISO exercise"
+          },
+          {
+            "form": "Form 3922",
+            "note": "ESPP transfer"
+          },
+          {
+            "form": "Form 1040",
+            "note": "Report compensation and capital gains"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T1 General",
+            "note": "Report employment benefit and capital gains"
+          },
+          {
+            "form": "Form T1135",
+            "note": "Report foreign shares if threshold met"
+          },
+          {
+            "form": "Schedule 3",
+            "note": "Capital gains on sale"
+          }
+        ]
+      },
+      "why": "ISOs trigger AMT in U.S.; cross-border moves complicate sourcing; ESPP has special holding period rules. Detailed day-by-day allocation may be required for accuracy and tax treaty application."
+    },
+    "us_estate_tax_exposure_nonresident": {
+      "id": "us_estate_tax_exposure_nonresident",
+      "name": "U.S. estate tax exposure for nonresident",
+      "description": "As a nonresident of the U.S., you own U.S.-situs assets (U.S. real estate, U.S. company stock, certain U.S. financial assets) that could face U.S. estate tax upon death, with only $60,000 exemption.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 706-NA",
+            "note": "U.S. estate tax return for nonresident aliens"
+          },
+          {
+            "form": "Treaty election",
+            "note": "Claim treaty benefits for higher exemption under Article XXIX B"
+          }
+        ]
+      },
+      "why": "U.S. imposes estate tax on U.S.-situs assets owned by nonresidents. Exemption only $60,000 (vs. $13.61M for U.S. persons). Treaty provides pro-rata unified credit based on worldwide estate."
+    },
+    "us_gift_tax_return_requirement": {
+      "id": "us_gift_tax_return_requirement",
+      "name": "U.S. gift tax return requirement",
+      "description": "You made or received gifts that may require U.S. gift tax reporting. U.S. persons making large gifts, or gifting U.S.-situs assets, may need to file Form 709.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 709",
+            "note": "U.S. gift (and generation-skipping transfer) tax return"
+          }
+        ]
+      },
+      "why": "U.S. taxes large gifts made by U.S. persons. Gifts of U.S.-situs property by nonresidents also taxable. Annual exclusion ($18,000 in 2024) and lifetime exemption ($13.61M) apply to U.S. persons."
+    },
+    "cross_border_trusts": {
+      "id": "cross_border_trusts",
+      "name": "Cross-border trusts (Forms 3520/3520-A)",
+      "description": "You create, receive distributions from, or act as trustee/beneficiary of a trust with U.S. and Canadian parties or assets, triggering complex reporting in both countries.",
+      "forms": {
+        "us": [
+          {
+            "form": "Form 3520",
+            "note": "Annual return to report transactions with foreign trusts and receipt of certain foreign gifts"
+          },
+          {
+            "form": "Form 3520-A",
+            "note": "Annual information return of foreign trust with U.S. owner"
+          },
+          {
+            "form": "Form 8938",
+            "note": "Report foreign trust if thresholds met"
+          }
+        ],
+        "ca": [
+          {
+            "form": "T3",
+            "note": "Trust income tax return"
+          },
+          {
+            "form": "T1135",
+            "note": "If foreign property exceeds threshold"
+          },
+          {
+            "form": "T1141",
+            "note": "Information return in respect of contributions to non-resident trusts"
+          }
+        ]
+      },
+      "why": "Cross-border trusts face complex tax treatment in both countries. U.S. has severe penalties for non-reporting (35% of value for Form 3520-A). Proper planning and reporting essential."
+    },
     "us_shareholder_canadian_corp": {
       "id": "us_shareholder_canadian_corp",
       "name": "U.S. shareholder of Canadian corporation (Forms 5471; GILTI/Subpart F)",

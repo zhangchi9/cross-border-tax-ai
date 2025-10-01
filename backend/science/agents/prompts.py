@@ -5,6 +5,7 @@ Owner: Science Team
 
 This module centralizes all LLM prompts for better maintainability.
 """
+from typing import Dict, Any, List
 
 
 def build_intake_system_prompt(gating_questions_text: str, current_module_info: str = "") -> str:
@@ -171,4 +172,392 @@ Please analyze these tags and provide a comprehensive forms analysis using the k
 5. Next steps for compliance
 
 Provide your analysis in the JSON format specified in the system prompt.
+"""
+
+
+def build_tag_analysis_prompt(question_context: Dict[str, Any], user_response: str, conversation_history: str) -> str:
+    """
+    Build prompt for LLM to analyze user response and assign tags with confidence
+
+    Args:
+        question_context: Question that was asked with possible tags
+        user_response: User's answer
+        conversation_history: Previous conversation context
+
+    Returns:
+        Prompt for tag analysis
+    """
+    question_text = question_context.get('question', '')
+    possible_tags = question_context.get('tags', [])
+    action = question_context.get('action', '')
+
+    return f"""You are analyzing a user's response in a cross-border tax intake interview to determine which tax tags should be assigned.
+
+QUESTION ASKED:
+{question_text}
+
+QUESTION ACTION:
+{action}
+
+POSSIBLE TAGS FROM THIS QUESTION:
+{', '.join(possible_tags) if possible_tags else 'None specified in action'}
+
+USER'S RESPONSE:
+{user_response}
+
+CONVERSATION HISTORY:
+{conversation_history}
+
+YOUR TASK:
+Analyze the user's response and determine:
+1. Which tags should be assigned based on their response
+2. Confidence level for each tag (high/medium/low)
+3. Whether clarification is needed for ambiguous responses
+
+CONFIDENCE LEVELS:
+- high: User explicitly confirmed or answer is unambiguous
+- medium: Answer implies the tag but wasn't explicitly stated
+- low: Answer is ambiguous, unclear, or contradictory
+
+RESPONSE FORMAT (JSON):
+{{
+    "assigned_tags": ["tag1", "tag2"],
+    "confidence": {{
+        "tag1": "high",
+        "tag2": "medium"
+    }},
+    "needs_clarification": false,
+    "clarification_question": "",
+    "reasoning": "Brief explanation of tag assignment decision"
+}}
+
+IMPORTANT:
+- Only assign tags that are mentioned in the question action or are clearly implied by the response
+- Be conservative: if uncertain, use low confidence or request clarification
+- Consider the full conversation context, not just this single response
+- User responses like "yes", "correct", "that's right" → high confidence
+- Vague responses like "maybe", "not sure", "partially" → low confidence or clarification needed
+"""
+
+
+def build_question_selection_prompt(conversation_context: str, current_state: Dict[str, Any], available_questions: List[Dict[str, Any]]) -> str:
+    """
+    Build prompt for LLM to select the most relevant next question
+
+    Args:
+        conversation_context: Formatted conversation history
+        current_state: Current workflow state (tags, modules, etc.)
+        available_questions: Questions not yet asked
+
+    Returns:
+        Prompt for question selection
+    """
+    assigned_tags = current_state.get('assigned_tags', [])
+    completed_modules = current_state.get('completed_modules', [])
+    current_module = current_state.get('current_module')
+
+    # Format available questions
+    questions_list = []
+    for i, q in enumerate(available_questions[:20], 1):  # Limit to 20 for context size
+        question_id = q.get('id', 'unknown')
+        question_text = q.get('question', '')
+        priority = q.get('priority', 'normal')
+        questions_list.append(f"{i}. [{question_id}] (Priority: {priority}) {question_text[:100]}")
+
+    questions_formatted = '\n'.join(questions_list)
+
+    return f"""You are conducting a cross-border tax intake interview. Your goal is to gather the most important information efficiently.
+
+CONVERSATION SO FAR:
+{conversation_context}
+
+CURRENT STATE:
+- Tags already assigned: {', '.join(assigned_tags) if assigned_tags else 'None yet'}
+- Current module: {current_module or 'Gating questions'}
+- Completed modules: {', '.join(completed_modules) if completed_modules else 'None'}
+- Total conversation turns: {len(conversation_context.split('User:')) - 1}
+
+AVAILABLE QUESTIONS (not yet asked):
+{questions_formatted}
+
+YOUR TASK:
+Select the MOST IMPORTANT question to ask next. Consider:
+1. What critical information is still missing?
+2. Which question provides the most value given what we already know?
+3. Can any questions be safely skipped based on previous answers?
+4. Do we have enough information to transition to forms analysis?
+
+DECISION CRITERIA:
+- Prioritize foundational questions (citizenship, residency) if not answered
+- Skip questions that are clearly irrelevant based on previous responses
+- Consider efficiency: one well-chosen question > multiple redundant questions
+- If sufficient tags assigned (≥2) and context clear, consider transitioning
+
+RESPONSE FORMAT (JSON):
+{{
+    "selected_question_id": "question_id" or null,
+    "reasoning": "Why this question is most important now",
+    "ready_for_transition": false,
+    "transition_reason": "",
+    "skip_questions": ["question_id1", "question_id2"],
+    "skip_reasoning": "Why these questions can be skipped"
+}}
+
+IMPORTANT:
+- Return null for selected_question_id if ready to transition to forms analysis
+- Set ready_for_transition: true only if you have enough information for meaningful form recommendations
+- Be thoughtful about skipping questions - only skip if clearly irrelevant
+- Consider the user's time: don't ask questions just because they're in the list
+"""
+
+
+def build_multi_fact_extraction_prompt(user_response: str, conversation_history: str, all_possible_tags: List[Dict[str, Any]]) -> str:
+    """
+    Build prompt for extracting ALL tax-relevant facts from a response
+
+    This is Phase 3 enhancement: extract multiple tags from single response
+    """
+
+    # Format tag descriptions
+    tags_formatted = []
+    for tag_info in all_possible_tags[:50]:  # Limit to 50 most relevant
+        tag_id = tag_info.get('tag_id', '')
+        description = tag_info.get('description', '')
+        if tag_id and description:
+            tags_formatted.append(f"- {tag_id}: {description[:150]}")
+
+    tags_text = '\n'.join(tags_formatted)
+
+    return f"""You are analyzing a user's response in a cross-border tax interview to extract ALL relevant tax facts mentioned.
+
+USER'S RESPONSE:
+{user_response}
+
+CONVERSATION HISTORY:
+{conversation_history}
+
+AVAILABLE TAX TAGS:
+{tags_text}
+
+YOUR TASK:
+Extract ALL tax-relevant facts from the user's response, not just those related to one question. Look for mentions of:
+- Citizenship/residency status
+- Employment (where, for whom, type)
+- Business ownership
+- Real estate (rental, purchase, sale)
+- Investment accounts
+- Retirement accounts (RRSP, 401k, IRA, etc.)
+- Cross-border activities
+- Any other tax-relevant information
+
+RESPONSE FORMAT (JSON):
+{{
+    "extracted_facts": [
+        {{
+            "fact": "User is a US citizen",
+            "related_tags": ["us_person_worldwide_filing"],
+            "confidence": "high",
+            "evidence": "User explicitly stated 'I'm a US citizen'"
+        }},
+        {{
+            "fact": "User owns Canadian rental property",
+            "related_tags": ["us_person_canadian_rental"],
+            "confidence": "high",
+            "evidence": "User mentioned 'I own rental property in Canada'"
+        }}
+    ],
+    "inferred_facts": [
+        {{
+            "fact": "User likely has cross-border tax obligations",
+            "related_tags": ["cross_border_financial_accounts"],
+            "confidence": "medium",
+            "evidence": "Lives in Canada but is US citizen, likely has accounts in both countries"
+        }}
+    ],
+    "reasoning": "Brief summary of key facts extracted"
+}}
+
+IMPORTANT:
+- Only extract facts actually mentioned or clearly implied
+- Distinguish between explicit facts (high confidence) and inferences (medium/low confidence)
+- Be conservative with inferences - don't assume too much
+- Evidence field should quote or paraphrase the relevant part of the response
+"""
+
+
+def build_module_relevance_prompt(initial_response: str, conversation_summary: str, modules: List[Dict[str, str]]) -> str:
+    """
+    Build prompt to determine which modules are relevant based on initial information
+
+    This is Phase 3 enhancement: smart module skipping
+    """
+
+    modules_formatted = []
+    for module in modules:
+        module_id = module.get('id', '')
+        module_name = module.get('name', '')
+        module_desc = module.get('description', '')
+        modules_formatted.append(f"- **{module_id}**: {module_name}\n  {module_desc}")
+
+    modules_text = '\n'.join(modules_formatted)
+
+    return f"""You are analyzing a user's tax situation to determine which areas (modules) are relevant to explore.
+
+INITIAL USER RESPONSE:
+{initial_response}
+
+CONVERSATION SO FAR:
+{conversation_summary}
+
+AVAILABLE MODULES:
+{modules_text}
+
+YOUR TASK:
+Determine which modules are relevant, which can be skipped, and which need verification.
+
+RESPONSE FORMAT (JSON):
+{{
+    "relevant_modules": [
+        {{
+            "module_id": "residency_elections",
+            "relevance": "high",
+            "reasoning": "User mentioned cross-border move, this is critical"
+        }}
+    ],
+    "skip_modules": [
+        {{
+            "module_id": "business_entities",
+            "reasoning": "User mentioned W-2 employment only, no business indicated"
+        }}
+    ],
+    "verify_modules": [
+        {{
+            "module_id": "real_estate",
+            "relevance": "medium",
+            "reasoning": "User owns property but unclear if rental or primary residence"
+        }}
+    ],
+    "overall_complexity": "medium",
+    "summary": "Brief assessment of user's situation"
+}}
+
+RULES:
+- relevant_modules: Clear indication this area applies
+- skip_modules: Clear indication this area does NOT apply
+- verify_modules: Might apply, need to ask to confirm
+- Be conservative with skipping - when in doubt, verify
+"""
+
+
+def build_clarification_question_prompt(tag: str, user_response: str, confidence_reason: str) -> str:
+    """
+    Build prompt to generate a clarification question for ambiguous responses
+
+    This is Phase 3 enhancement: auto-clarification flow
+    """
+
+    return f"""You need to clarify an ambiguous response in a tax consultation.
+
+TAG IN QUESTION: {tag}
+USER'S ORIGINAL RESPONSE: {user_response}
+WHY AMBIGUOUS: {confidence_reason}
+
+YOUR TASK:
+Generate a clear, friendly clarification question that will help determine if this tag should be assigned.
+
+REQUIREMENTS:
+- Be conversational and friendly
+- Explain WHY you're asking (briefly)
+- Offer clear answer options
+- Keep it concise (1-2 sentences)
+
+RESPONSE FORMAT (JSON):
+{{
+    "clarification_question": "Just to clarify - did you...",
+    "context": "I'm asking because...",
+    "suggested_answers": ["Yes, definitely", "No, that's not my situation", "I'm not sure"]
+}}
+
+EXAMPLE:
+For tag: residency_change_dual_status
+User said: "I spent time in both countries"
+Clarification: "Just to clarify - did you change your primary residence from one country to another this year, or were you traveling/working temporarily in both countries? I'm asking because moving between countries has different tax implications than just visiting."
+"""
+
+
+def build_follow_up_question_prompt(original_question: str, user_response: str, tag_assigned: str) -> str:
+    """
+    Build prompt to generate intelligent follow-up questions
+
+    This is Phase 3 enhancement: adaptive follow-ups
+    """
+
+    return f"""You are conducting a tax consultation. Based on the user's response, determine if a follow-up question would be valuable.
+
+ORIGINAL QUESTION: {original_question}
+USER'S RESPONSE: {user_response}
+TAG ASSIGNED: {tag_assigned}
+
+YOUR TASK:
+Determine if a follow-up question would help gather more specific or important information.
+
+RESPONSE FORMAT (JSON):
+{{
+    "needs_followup": true/false,
+    "followup_question": "..." or null,
+    "reasoning": "Why this follow-up is important",
+    "expected_tags": ["potential_additional_tags"],
+    "max_depth": 2
+}}
+
+WHEN TO FOLLOW UP:
+- User mentioned something important but vague ("several properties", "some accounts")
+- Response suggests complexity that needs drilling down
+- Common problem areas (e.g., US person with TFSA)
+- Potential compliance issues
+
+WHEN NOT TO:
+- Response was clear and complete
+- Follow-up would be annoying or redundant
+- Information can be gathered later
+
+IMPORTANT:
+- Keep follow-ups focused and relevant
+- Don't over-interrogate
+- Max 2 follow-ups per original question
+"""
+
+
+def build_explanation_prompt(question: str, conversation_context: str, assigned_tags: List[str]) -> str:
+    """
+    Build prompt to generate explanations for why asking a question
+
+    This is Phase 3 enhancement: explanation generation
+    """
+
+    return f"""You are explaining to a user why you're asking a particular question in their tax consultation.
+
+QUESTION TO BE ASKED: {question}
+CONVERSATION SO FAR: {conversation_context}
+TAGS ALREADY ASSIGNED: {', '.join(assigned_tags) if assigned_tags else 'None yet'}
+
+YOUR TASK:
+Generate a brief, friendly explanation of why this question is relevant to the user's situation.
+
+RESPONSE FORMAT (JSON):
+{{
+    "context": "Based on what you've told me...",
+    "explanation": "...I need to ask about X because...",
+    "relevance": "This will help me determine...",
+    "combined": "Full friendly explanation to show user"
+}}
+
+REQUIREMENTS:
+- Keep it concise (2-3 sentences max)
+- Make it personal to their situation
+- Avoid jargon
+- Be encouraging and friendly
+
+EXAMPLE:
+"Based on what you've told me, you're a US citizen living in Canada with employment income. Let me ask about retirement accounts, as RRSP and 401(k) accounts have special cross-border reporting requirements that are important to get right."
 """

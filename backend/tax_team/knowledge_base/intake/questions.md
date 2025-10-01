@@ -17,37 +17,37 @@ These are initial screening questions to determine which modules apply to the us
 
 ### Are you a U.S. citizen or U.S. green-card holder?
 - **ID**: `us_person_check`
-- **Action**: Go to Module A — Residency & Elections
+- **Action**: Add tag `us_person_worldwide_filing`; Go to Module A — Residency & Elections
 - **Quick Replies**: Yes, No, Not sure
 
 ### For this tax year, are you a Canadian tax resident (or unsure about your residency status)?
 - **ID**: `canadian_resident_check`
-- **Action**: Go to Module A — Residency & Elections
+- **Action**: Add tag `canadian_tax_resident_worldwide_filing`; Go to Module A — Residency & Elections
 - **Quick Replies**: Yes, No, Not sure
 
 ### Did you move between the U.S. and Canada this year, or spend significant time in the other country (e.g., >183 days)?
 - **ID**: `cross_border_move`
-- **Action**: Go to Module A — Residency & Elections
+- **Action**: Add tag `residency_change_dual_status`; Go to Module A — Residency & Elections
 - **Quick Replies**: Yes, No
 
 ### Do you plan to claim any treaty benefits or elections (e.g., tie-breaker rules, first-year or dual-status elections)?
 - **ID**: `treaty_benefits`
-- **Action**: Go to Module A — Residency & Elections
+- **Action**: Add tag `treaty_based_position`; Go to Module A — Residency & Elections
 - **Quick Replies**: Yes, No, Not sure
 
 ### Did you earn employment or contractor income in the U.S. at any time this year?
 - **ID**: `us_employment`
-- **Action**: Go to Module B — Employment & U.S. States
+- **Action**: Add tag `wages_taxable_us_source`; Go to Module B — Employment & U.S. States
 - **Quick Replies**: Yes, No
 
 ### Did you earn employment or contractor income in Canada at any time this year?
 - **ID**: `canada_employment`
-- **Action**: Go to Module B — Employment & U.S. States
+- **Action**: Add tag `wages_taxable_canada_source`; Go to Module B — Employment & U.S. States
 - **Quick Replies**: Yes, No
 
 ### Did you live in one U.S. state and work in another, or work in multiple U.S. states?
 - **ID**: `multi_state_work`
-- **Action**: Go to Module B — Employment & U.S. States
+- **Action**: Add tag `state_nonconformity_treaty_ftc`; Go to Module B — Employment & U.S. States
 - **Quick Replies**: Yes, No
 
 ### Do you own or control a business or entity (sole prop, partnership, corporation, LLC/ULC) in the U.S. or Canada?
@@ -57,7 +57,7 @@ These are initial screening questions to determine which modules apply to the us
 
 ### Do you own 10% or more of a foreign corporation/partnership or have a controlled foreign affiliate?
 - **ID**: `foreign_corporation`
-- **Action**: Go to Module C — Business & Entities
+- **Action**: Add tag `us_shareholder_canadian_corp`; Go to Module C — Business & Entities
 - **Quick Replies**: Yes, No, Not sure
 
 ### Did you own, buy, sell, or rent out real estate (home, rental, vacation property) in the U.S. or Canada this year?
@@ -67,42 +67,42 @@ These are initial screening questions to determine which modules apply to the us
 
 ### Do you want to claim housing-related items (principal residence, moving expenses, home office, or foreign housing exclusions/deductions)?
 - **ID**: `housing_related`
-- **Action**: Go to Module D — Real Estate
+- **Action**: Add tag `cross_border_principal_residence`; Go to Module D — Real Estate
 - **Quick Replies**: Yes, No
 
 ### Do you hold non-registered financial accounts or investments across the border (bank/brokerage accounts, ETFs/mutual funds, bonds, GICs, crypto) located in the U.S. or Canada?
 - **ID**: `financial_accounts`
-- **Action**: Go to Module E — Investments & Financial Assets
+- **Action**: Add tag `cross_border_financial_accounts`; Go to Module E — Investments & Financial Assets
 - **Quick Replies**: Yes, No
 
 ### Do you have registered accounts or pensions (RRSP, TFSA, RESP, RDSP, 401(k), IRA) or receive government/social benefits (CPP/OAS, EI, U.S. Social Security)?
 - **ID**: `registered_accounts`
-- **Action**: Go to Module F — Pensions, Savings & Social Benefits
+- **Action**: Add tag `cross_border_retirement_plans`; Go to Module F — Pensions, Savings & Social Benefits
 - **Quick Replies**: Yes, No
 
 ### Did you receive or exercise equity compensation (RSUs, stock options, ESPP/RSAs) from a U.S. or Canadian employer, including during a cross-border move?
 - **ID**: `equity_compensation`
-- **Action**: Go to Module G — Equity Compensation
+- **Action**: Add tag `equity_compensation_cross_border_workdays`; Go to Module G — Equity Compensation
 - **Quick Replies**: Yes, No
 
 ### Did you give or receive large gifts or inheritances, or are you a grantor/beneficiary/trustee of a trust (including Canadian trusts with U.S. reporting)?
 - **ID**: `gifts_trusts`
-- **Action**: Go to Module H — Estates, Gifts & Trusts
+- **Action**: Add tag `cross_border_trusts`; Go to Module H — Estates, Gifts & Trusts
 - **Quick Replies**: Yes, No, Not sure
 
 ### Do you need to file information reports or fix past issues (FBAR/FinCEN 114, IRS Form 8938, CRA T1135, PFIC Form 8621, Forms 3520/3520-A/5471/8865/8858)?
 - **ID**: `information_reports`
-- **Action**: Go to Module I — Reporting & Cleanup
+- **Action**: Add tag `fbar_foreign_account_reporting`; Go to Module I — Reporting & Cleanup
 - **Quick Replies**: Yes, No, Not sure
 
 ### Do you need to amend prior-year returns or respond to tax notices/assessments from the IRS or CRA?
 - **ID**: `amend_returns`
-- **Action**: Go to Module I — Reporting & Cleanup
+- **Action**: Add tag `compliance_relief_programs`; Go to Module I — Reporting & Cleanup
 - **Quick Replies**: Yes, No
 
 ### Did you miss any required filings in prior years (e.g., late FBAR/8938/T1135) and want to use a voluntary disclosure/streamlined path?
 - **ID**: `missed_filings`
-- **Action**: Go to Module I — Reporting & Cleanup
+- **Action**: Add tag `compliance_relief_programs`; Go to Module I — Reporting & Cleanup
 - **Quick Replies**: Yes, No, Not sure
 
 ---

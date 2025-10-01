@@ -81,9 +81,9 @@ class KnowledgeBaseParser:
         """Parse gating questions section"""
         questions = []
 
-        # Find gating questions section
+        # Find gating questions section - look for everything until first Module or ---
         gating_section = re.search(
-            r'## Gating Questions\n(.*?)(?=\n## Module |$)',
+            r'## Gating Questions\n(.*?)(?=\n---\n|$)',
             content,
             re.DOTALL
         )
@@ -91,20 +91,32 @@ class KnowledgeBaseParser:
         if not gating_section:
             return questions
 
-        # Parse each question
-        question_pattern = r'### (.*?)\n- \*\*ID\*\*: `([^`]+)`\n- \*\*Action\*\*: (.*?)(?:\n- \*\*Quick Replies\*\*: (.*))?(?=\n\n|\n###|$)'
+        # Parse each question - simpler pattern that doesn't depend on lookahead
+        # Format: ### Question\n- **ID**: `id`\n- **Action**: action\n- **Quick Replies** (optional)
+        question_pattern = r'### ([^\n]+)\n- \*\*ID\*\*: `([^`]+)`\n- \*\*Action\*\*: ([^\n]+)'
 
-        for match in re.finditer(question_pattern, gating_section.group(1), re.DOTALL):
+        for match in re.finditer(question_pattern, gating_section.group(1)):
             question_text = match.group(1).strip()
             question_id = match.group(2).strip()
             action = match.group(3).strip()
-            quick_replies = match.group(4)
 
-            questions.append({
+            # Extract quick replies if present (look ahead from this match)
+            quick_replies_match = re.search(
+                r'- \*\*Quick Replies\*\*: ([^\n]+)',
+                gating_section.group(1)[match.end():match.end()+200]
+            )
+
+            question_data = {
                 "id": question_id,
                 "question": question_text,
                 "action": action
-            })
+            }
+
+            if quick_replies_match:
+                quick_replies_text = quick_replies_match.group(1).strip()
+                question_data["quick_replies"] = [r.strip() for r in quick_replies_text.split(',')]
+
+            questions.append(question_data)
 
         return questions
 
@@ -138,21 +150,32 @@ class KnowledgeBaseParser:
         """Parse questions within a module"""
         questions = []
 
-        # Pattern for module questions (similar to gating questions)
-        question_pattern = r'###+ (.*?)\n(?:- \*\*ID\*\*: `([^`]+)`\n)?- \*\*Action\*\*: (.*?)(?:\n- \*\*Quick Replies\*\*: (.*))?(?=\n\n|\n###|$)'
+        # Pattern for module questions - match any level of heading (###, ####, etc)
+        # Format: ### Question\n- **ID**: `id`\n- **Action**: action\n- **Quick Replies** (optional)
+        question_pattern = r'###+ ([^\n]+)\n- \*\*ID\*\*: `([^`]+)`\n- \*\*Action\*\*: ([^\n]+)'
 
-        for match in re.finditer(question_pattern, module_content, re.DOTALL):
+        for match in re.finditer(question_pattern, module_content):
             question_text = match.group(1).strip()
-            question_id = match.group(2).strip() if match.group(2) else ""
+            question_id = match.group(2).strip()
             action = match.group(3).strip()
-            quick_replies = match.group(4)
 
-            if question_id:  # Only include if has ID
-                questions.append({
-                    "id": question_id,
-                    "question": question_text,
-                    "action": action
-                })
+            # Extract quick replies if present
+            quick_replies_match = re.search(
+                r'- \*\*Quick Replies\*\*: ([^\n]+)',
+                module_content[match.end():match.end()+200]
+            )
+
+            question_data = {
+                "id": question_id,
+                "question": question_text,
+                "action": action
+            }
+
+            if quick_replies_match:
+                quick_replies_text = quick_replies_match.group(1).strip()
+                question_data["quick_replies"] = [r.strip() for r in quick_replies_text.split(',')]
+
+            questions.append(question_data)
 
         return questions
 

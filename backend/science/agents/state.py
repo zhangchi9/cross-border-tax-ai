@@ -50,6 +50,8 @@ class TaxConsultationState(TypedDict):
 
     # Tax Information
     assigned_tags: List[str]
+    tag_confidence: Dict[str, str]  # tag -> confidence level (high/medium/low)
+    tag_assignment_reasoning: Dict[str, Dict[str, Any]]  # tag -> {question_id, response, timestamp}
     user_profile: UserProfile
     jurisdictions: List[str]
     income_types: List[str]
@@ -59,6 +61,8 @@ class TaxConsultationState(TypedDict):
     available_gating_questions: List[Dict[str, Any]]
     current_module_questions: List[Dict[str, Any]]
     knowledge_base: Dict[str, Any]
+    asked_question_ids: List[str]  # Track which questions have been asked
+    skipped_question_ids: List[str]  # Track which questions were skipped due to context
 
     # Forms Analysis Results
     required_forms: List[Dict[str, Any]]
@@ -72,6 +76,15 @@ class TaxConsultationState(TypedDict):
     should_transition: bool
     transition_reason: Optional[str]
     error_message: Optional[str]
+
+    # Phase 3: Enhanced Features
+    clarification_mode: bool  # True when asking clarification question
+    clarification_context: Optional[Dict[str, Any]]  # Context for current clarification
+    follow_up_depth: int  # Track how many follow-ups asked for current question
+    skipped_modules: List[str]  # Modules determined to be irrelevant
+    corrections_made: List[Dict[str, Any]]  # Track user corrections with timestamps
+    verification_needed: List[Dict[str, Any]]  # Tags that need verification
+    extracted_facts: List[Dict[str, Any]]  # Facts extracted via multi-fact extraction
 
     # Metadata
     created_at: str
@@ -100,6 +113,8 @@ def create_initial_state(session_id: str, initial_message: str = "") -> TaxConsu
 
         # Tax Information
         assigned_tags=[],
+        tag_confidence={},
+        tag_assignment_reasoning={},
         user_profile=UserProfile(
             countries_involved=[],
             tax_residency_status=None,
@@ -118,6 +133,8 @@ def create_initial_state(session_id: str, initial_message: str = "") -> TaxConsu
         available_gating_questions=[],
         current_module_questions=[],
         knowledge_base={},
+        asked_question_ids=[],
+        skipped_question_ids=[],
 
         # Forms Analysis Results
         required_forms=[],
@@ -131,6 +148,15 @@ def create_initial_state(session_id: str, initial_message: str = "") -> TaxConsu
         should_transition=False,
         transition_reason=None,
         error_message=None,
+
+        # Phase 3: Enhanced Features
+        clarification_mode=False,
+        clarification_context=None,
+        follow_up_depth=0,
+        skipped_modules=[],
+        corrections_made=[],
+        verification_needed=[],
+        extracted_facts=[],
 
         # Metadata
         created_at=now,
