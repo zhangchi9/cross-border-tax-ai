@@ -22,7 +22,9 @@
       "Bash(del debug_workflow.py test_simple_workflow.py)",
       "Bash(find:*)",
       "Bash(set PYTHONPATH=%PYTHONPATH%)",
-      "Bash(%CD%)"
+      "Bash(%CD%)",
+      "Bash(copy backend.env .env)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

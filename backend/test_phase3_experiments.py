@@ -120,7 +120,8 @@ def print_forms_analysis(state: dict):
     print("FORMS ANALYSIS RESULTS")
     print("=" * 80)
 
-    print(f"\nComplexity: {state.get('estimated_complexity', 'N/A').upper()}")
+    complexity = state.get('estimated_complexity', 'N/A')
+    print(f"\nComplexity: {complexity.upper() if complexity and complexity != 'N/A' else 'N/A'}")
 
     print(f"\n[Required Forms] ({len(state.get('required_forms', []))}):")
     for form in state.get('required_forms', []):
@@ -322,7 +323,7 @@ async def test_scenario_4_full_conversation():
     if result['current_phase'] != 'forms_analysis':
         print("\n[INFO] Forcing transition to forms analysis...")
         result = await workflow.force_transition_to_forms_analysis(session_id)
-        print_message("assistant", result['assistant_response'])
+        print_message("assistant", result.get('message', result.get('assistant_response', '')))
         print_forms_analysis(result)
 
     return result

@@ -17,10 +17,12 @@ class ScienceConfig:
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 
     # Change this line to switch between models - "openai" or "gemini"
-    AI_MODEL_PROVIDER: str = "openai"  # <-- Change this to switch models
+    # Can be overridden with AI_MODEL_PROVIDER environment variable
+    AI_MODEL_PROVIDER: str = os.getenv("AI_MODEL_PROVIDER", "openai")  # <-- Change this to switch models
 
     # Model names with fallbacks for empty environment variables
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "models/gemini-1.5-flash-latest"
+    # Note: Gemini models use format "gemini-1.5-pro" or "gemini-1.5-flash" (langchain adds "models/" prefix)
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "gemini-1.5-pro"
     OPENAI_MODEL: str = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
 
     # LLM Configuration

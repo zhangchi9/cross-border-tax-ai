@@ -118,6 +118,10 @@ class IntakeNode(BaseNode):
         """Process intake phase"""
 
         try:
+            # Guard against None state
+            if state is None:
+                raise ValueError("IntakeNode received None state")
+
             # Update knowledge base context in state
             state["knowledge_base"] = self.knowledge_base
             state["available_gating_questions"] = self.knowledge_base.get("intake", {}).get("gating_questions", {}).get("questions", [])
@@ -131,6 +135,8 @@ class IntakeNode(BaseNode):
 
             # Analyze previous response for tags (if there was a question asked)
             tag_analysis_result = None
+            previous_question = None
+            previous_question_id = None
             if state["current_message"] and len(state["asked_question_ids"]) > 0:
                 # Get the last question that was asked
                 previous_question_id = state["asked_question_ids"][-1]
@@ -261,6 +267,17 @@ class IntakeNode(BaseNode):
             return state
 
         except Exception as e:
+            # Handle error - check if state exists
+            import traceback
+            print(f"[ERROR] IntakeNode exception: {str(e)}")
+            print(f"[ERROR] Traceback: {traceback.format_exc()}")
+            if state is None:
+                # Return minimal error state if state is None
+                return {
+                    "error_message": f"Intake processing error: {str(e)}",
+                    "assistant_response": "I apologize, but I'm having trouble processing your request. Could you please try again?",
+                    "current_phase": "intake"
+                }
             state["error_message"] = f"Intake processing error: {str(e)}"
             state["assistant_response"] = "I apologize, but I'm having trouble processing your request. Could you please try again?"
             return state
@@ -974,7 +991,7 @@ class IntakeNode(BaseNode):
 
         return {"extracted_facts": [], "inferred_facts": []}
 
-    def _apply_extracted_facts(self, extraction_result: Dict[str, Any], state: TaxConsultationState):
+    def _apply_extracted_facts(self, state: TaxConsultationState, extraction_result: Dict[str, Any]):
         """
         Apply the facts extracted from multi-fact extraction to state
 
@@ -1032,6 +1049,8 @@ class IntakeNode(BaseNode):
                             "evidence": evidence,
                             "added_at": datetime.now().isoformat()
                         })
+
+        return state
 
     def _analyze_module_relevance(self, state: TaxConsultationState) -> Dict[str, Any]:
         """
