@@ -26,7 +26,8 @@ from .prompts import (
     build_module_relevance_prompt,
     build_clarification_question_prompt,
     build_follow_up_question_prompt,
-    build_explanation_prompt
+    build_explanation_prompt,
+    build_question_relevance_prompt
 )
 
 
@@ -712,43 +713,93 @@ class IntakeNode(BaseNode):
 
     def _should_skip_question(self, question: Dict[str, Any], state: TaxConsultationState) -> bool:
         """
-        Determine if a question should be skipped based on previous responses
-        Uses simple heuristics to avoid redundant questions
+        Determine if a question should be skipped using LLM-based intelligent analysis.
+
+        Replaces rule-based skipping which was too aggressive and caused issues
+        with cross-border situations (e.g., Canadian PR with US RSU income).
         """
+        # CRITICAL: Never skip questions at the start of conversation
+        # We need to establish baseline information before intelligent skipping
+        questions_asked = len(state.get("asked_question_ids", []))
+        if questions_asked < science_config.MIN_QUESTIONS_BEFORE_SKIPPING:
+            return False  # Always ask first N questions to establish context
 
-        question_text = question.get("question", "").lower()
-        question_id = question.get("id", "")
+        # Check if LLM-based skipping is enabled
+        if not science_config.USE_LLM_QUESTION_SKIPPING:
+            # Disabled - never skip questions
+            return False
 
-        # Get conversation history
-        conversation_text = " ".join([
-            msg["content"].lower()
-            for msg in state["messages"]
-            if msg["role"] == "user"
-        ])
+        # Use LLM to intelligently determine relevance
+        return self._should_skip_question_with_llm(question, state)
 
-        # Skip rules based on question patterns
+    def _should_skip_question_with_llm(self, question: Dict[str, Any], state: TaxConsultationState) -> bool:
+        """
+        Use LLM to intelligently determine if a question should be skipped.
 
-        # If user already said they're not a U.S. person, skip U.S.-person-only questions
-        if "u.s. person" in question_text or "u.s. citizen" in question_text:
-            if any(indicator in conversation_text for indicator in ["not a u.s.", "canadian citizen only", "no u.s. status"]):
-                return True
+        This analyzes the conversation context to make smart decisions about
+        whether a question is still relevant, particularly important for
+        cross-border situations.
 
-        # If user said no employment income, skip employment questions
-        if "employment" in question_text or "work" in question_text:
-            if any(indicator in conversation_text for indicator in ["no employment", "not working", "retired"]):
-                return True
+        Args:
+            question: Question to evaluate
+            state: Current conversation state
 
-        # If user said no business, skip business questions
-        if "business" in question_text or "corporation" in question_text:
-            if any(indicator in conversation_text for indicator in ["no business", "not self-employed"]):
-                return True
+        Returns:
+            True if question should be skipped, False otherwise
+        """
+        from langchain_core.messages import HumanMessage
 
-        # If user said no real estate, skip real estate questions
-        if "real estate" in question_text or "property" in question_text:
-            if any(indicator in conversation_text for indicator in ["no property", "don't own"]):
-                return True
+        try:
+            # Get conversation context
+            conversation_context = get_conversation_context(state, last_n=15)
 
-        # Don't skip by default
+            # Get asked questions list
+            asked_question_ids = state.get("asked_question_ids", [])
+
+            # Build list of asked question texts for context
+            asked_questions = []
+            all_available = state.get("available_gating_questions", [])
+            modules = self.knowledge_base.get("intake", {}).get("modules", {})
+            for module_data in modules.values():
+                all_available.extend(module_data.get("questions", []))
+
+            for qid in asked_question_ids[-5:]:  # Last 5 questions
+                for q in all_available:
+                    if q.get("id") == qid:
+                        asked_questions.append(q.get("question", ""))
+                        break
+
+            # Build prompt
+            prompt = build_question_relevance_prompt(
+                question=question,
+                conversation_summary=conversation_context,
+                assigned_tags=state.get("assigned_tags", []),
+                asked_questions=asked_questions
+            )
+
+            # Call LLM
+            response = self.llm.invoke([HumanMessage(content=prompt)])
+            content = response.content
+
+            # Parse JSON response
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                result = json.loads(json_match.group(0))
+                should_skip = result.get("should_skip", False)
+                reasoning = result.get("reasoning", "")
+
+                # Log the decision for debugging
+                if should_skip:
+                    print(f"[LLM SKIP] Skipping question '{question.get('id')}': {reasoning}")
+
+                return should_skip
+
+        except Exception as e:
+            print(f"[WARNING] LLM question relevance check failed: {e}")
+            # Safe fallback: don't skip if LLM fails
+            return False
+
+        # Default: don't skip
         return False
 
     def _get_triggered_module(self, state: TaxConsultationState) -> Optional[str]:

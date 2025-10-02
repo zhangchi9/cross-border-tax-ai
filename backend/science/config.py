@@ -23,19 +23,22 @@ class ScienceConfig:
     # Model names with fallbacks for empty environment variables
     # Note: Gemini models use format "gemini-1.5-pro" or "gemini-1.5-flash" (langchain adds "models/" prefix)
     GEMINI_MODEL: str = os.getenv("GEMINI_MODEL") or "gemini-1.5-pro"
-    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL") or "gpt-5"
 
     # LLM Configuration
     LLM_TEMPERATURE: float = 0.1
 
     # Workflow Configuration
     WORKFLOW_RECURSION_LIMIT: int = 25
-    MIN_TAGS_FOR_TRANSITION: int = 2
-    MIN_CONVERSATION_LENGTH: int = 6
+    MIN_TAGS_FOR_TRANSITION: int = 6  # Increased from 2 to prevent premature transition
+    MIN_CONVERSATION_LENGTH: int = 24  # Increased from 6 to ensure thorough intake (12 Q&A pairs)
+    MIN_GATING_QUESTIONS_ASKED: int = 8  # Minimum gating questions before allowing transition
+    MIN_QUESTIONS_BEFORE_SKIPPING: int = 5  # Ask at least 5 questions before LLM can skip questions
 
     # Phase 2: LLM Intelligence Features (Feature Flags)
     USE_LLM_TAG_ASSIGNMENT: bool = True  # Enable LLM-based tag analysis with confidence scoring
     USE_LLM_QUESTION_SELECTION: bool = False  # Enable LLM-driven question selection (set to True to activate)
+    USE_LLM_QUESTION_SKIPPING: bool = True  # Enable LLM-based intelligent question skipping (replaces rule-based)
 
     # When False, falls back to deterministic keyword matching and sequential question flow
 
@@ -43,13 +46,14 @@ class ScienceConfig:
     USE_MULTI_FACT_EXTRACTION: bool = True  # Extract all facts from each response
     USE_SMART_MODULE_SKIPPING: bool = True  # Skip irrelevant modules based on context
     USE_EXPLANATION_GENERATION: bool = True  # Explain why asking each question
-    USE_AUTO_CLARIFICATION: bool = True  # Automatically ask clarifications for low confidence
-    USE_ADAPTIVE_FOLLOWUPS: bool = True  # Ask intelligent follow-up questions
-    USE_VERIFICATION_PHASE: bool = True  # Verify low/medium confidence tags before forms analysis
+    USE_AUTO_CLARIFICATION: bool = False  # DISABLED - causes repeated question loops
+    USE_ADAPTIVE_FOLLOWUPS: bool = False  # DISABLED - causes repeated question loops
+    USE_VERIFICATION_PHASE: bool = False  # DISABLED - causes repeated question loops
     USE_PROGRESSIVE_ASSIGNMENT: bool = True  # Assign tags from any response, not just direct questions
     USE_CONTEXT_CORRECTION: bool = True  # Allow users to correct previous answers
 
     # Phase 3 features dramatically improve UX but increase LLM costs
+    # NOTE: Clarification, follow-ups, and verification temporarily disabled due to repeated question bugs
 
 
 science_config = ScienceConfig()

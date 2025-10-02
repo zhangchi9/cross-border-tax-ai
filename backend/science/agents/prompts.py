@@ -561,3 +561,102 @@ REQUIREMENTS:
 EXAMPLE:
 "Based on what you've told me, you're a US citizen living in Canada with employment income. Let me ask about retirement accounts, as RRSP and 401(k) accounts have special cross-border reporting requirements that are important to get right."
 """
+
+
+def build_question_relevance_prompt(
+    question: Dict[str, Any],
+    conversation_summary: str,
+    assigned_tags: List[str],
+    asked_questions: List[str]
+) -> str:
+    """
+    Build prompt for LLM to determine if a question is still relevant to ask.
+
+    This replaces rule-based question skipping with intelligent LLM-based analysis.
+
+    Args:
+        question: The question being evaluated
+        conversation_summary: Summary of conversation so far
+        assigned_tags: Tags assigned to user
+        asked_questions: List of questions already asked
+
+    Returns:
+        Prompt for LLM to evaluate question relevance
+    """
+    question_text = question.get("question", "")
+    question_id = question.get("id", "")
+    question_action = question.get("action", "")
+
+    return f"""You are evaluating whether a specific question is still relevant to ask in a tax consultation conversation.
+
+CONTEXT:
+
+User's situation so far (from conversation):
+{conversation_summary}
+
+Tags already assigned to user:
+{', '.join(assigned_tags) if assigned_tags else '(none yet)'}
+
+Questions already asked:
+{', '.join(asked_questions[-5:]) if asked_questions else '(none yet)'}
+
+QUESTION TO EVALUATE:
+
+ID: {question_id}
+Text: "{question_text}"
+Action if answered yes: {question_action}
+
+YOUR TASK:
+
+Determine if this question should be SKIPPED or ASKED based on the conversation context.
+
+CRITICAL RULES:
+
+1. **Cross-Border Situations**: If user has ANY cross-border elements (US income, assets, residency changes, etc.), DO NOT skip questions about EITHER country
+   - Example: "Canadian PR with US RSU" → DON'T skip US tax questions
+   - Example: "Not US citizen but has US rental property" → DON'T skip US income questions
+
+2. **Skip ONLY if**:
+   - Question already directly answered in conversation
+   - Question is completely irrelevant (e.g., asking about business when user explicitly said "no business")
+   - User has zero connection to topic (e.g., "never been to US, no US assets/income" → can skip US-specific questions)
+
+3. **DO NOT skip if**:
+   - User mentioned related topics (e.g., "RSU" means equity questions are relevant)
+   - User has cross-border situation (questions about both countries needed)
+   - User's answer was ambiguous or unclear
+   - Question provides important context even if user might say "no"
+
+4. **When in doubt**: ASK the question (return should_skip: false)
+
+EXAMPLES:
+
+Example 1:
+User said: "I am a Canadian PR with US RSU income"
+Question: "Did you receive equity compensation (RSUs, stock options)?"
+Analysis: User explicitly mentioned RSU - question is HIGHLY relevant
+Result: {{"should_skip": false, "reasoning": "User mentioned US RSU income, so equity compensation questions are directly relevant"}}
+
+Example 2:
+User said: "I am not a US citizen"
+Question: "Are you a U.S. citizen or U.S. green-card holder?"
+Analysis: Already directly answered
+Result: {{"should_skip": true, "reasoning": "User already answered this question - they stated they are not a US citizen"}}
+
+Example 3:
+User said: "I am a Canadian citizen, never been to US, no US income or assets"
+Question: "Did you earn employment income in the U.S.?"
+Analysis: User explicitly stated no US income or presence
+Result: {{"should_skip": true, "reasoning": "User explicitly stated no US income or presence, so US employment question not relevant"}}
+
+Example 4:
+User said: "I am not a US citizen but I have a rental property in Seattle"
+Question: "Do you want to claim principal residence or moving expenses?"
+Analysis: User has US real estate, so US housing/real estate questions are relevant even though not US citizen
+Result: {{"should_skip": false, "reasoning": "User has US rental property, so US housing-related questions remain relevant despite not being US citizen"}}
+
+Return ONLY valid JSON with this exact structure:
+{{
+  "should_skip": boolean,
+  "reasoning": "brief explanation of decision"
+}}"""

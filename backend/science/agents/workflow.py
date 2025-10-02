@@ -26,10 +26,14 @@ def should_continue_intake(state: TaxConsultationState) -> Literal["intake", "fo
 
     # Auto-transition if we have enough tags (configured threshold)
     # AND sufficient conversation to have gathered context
+    # AND minimum gating questions asked (prevents premature transition)
     conversation_length = len(state.get("messages", []))
+    questions_asked = len(state.get("asked_question_ids", []))
+
     if len(state.get("assigned_tags", [])) >= science_config.MIN_TAGS_FOR_TRANSITION:
         if conversation_length >= science_config.MIN_CONVERSATION_LENGTH:
-            return "forms_analysis"
+            if questions_asked >= science_config.MIN_GATING_QUESTIONS_ASKED:
+                return "forms_analysis"
 
     # Check conversation length to prevent infinite loops
     # But allow for longer conversations since we have many questions (18 gating + module questions)
