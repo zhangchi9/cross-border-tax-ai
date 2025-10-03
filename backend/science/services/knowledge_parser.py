@@ -181,12 +181,12 @@ class KnowledgeBaseParser:
 
     def parse_tag_definitions(self) -> Dict[str, Any]:
         """
-        Parse tags/definitions.md into JSON format
+        Parse tags/tags_definitions.md into JSON format
 
         Returns:
             Dictionary with tag definitions
         """
-        tags_file = self.tax_team_dir / "tags" / "definitions.md"
+        tags_file = self.tax_team_dir / "tags" / "tags_definitions.md"
 
         if not tags_file.exists():
             return {"tag_definitions": {}}
@@ -195,8 +195,8 @@ class KnowledgeBaseParser:
 
         tag_definitions = {}
 
-        # Parse each tag
-        tag_pattern = r'### ([a-z_]+)\n\n\*\*Name\*\*: (.*?)\n\n\*\*Description\*\*: (.*?)\n\n\*\*Forms:\*\*(.*?)\*\*Why\*\*: (.*?)(?=\n\n---|###|$)'
+        # Parse each tag (using ## not ### since tags are h2 level)
+        tag_pattern = r'## ([a-z_]+)\n\n\*\*Name\*\*: (.*?)\n\n\*\*Description\*\*: (.*?)\n\n\*\*Forms:\*\*(.*?)\*\*Why\*\*: (.*?)(?=\n\n---|##|$)'
 
         for match in re.finditer(tag_pattern, content, re.DOTALL):
             tag_id = match.group(1).strip()

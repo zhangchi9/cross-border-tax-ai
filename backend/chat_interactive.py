@@ -137,12 +137,21 @@ def print_assistant_message(message: str, quick_replies: list = None):
 def print_progress(state: Dict[str, Any]):
     """Print progress indicators"""
     tags_count = len(state.get('assigned_tags', []))
+    tags = state.get('assigned_tags', [])
     turns = state.get('conversation_turns', 0)
     phase = state.get('current_phase', 'intake')
 
     print(colored("\n   📊 Progress:", Colors.BRIGHT_BLACK))
     print(colored(f"      Phase: {phase.upper()}", Colors.BRIGHT_BLACK))
     print(colored(f"      Tags Assigned: {tags_count}", Colors.BRIGHT_BLACK))
+
+    # Display list of tags
+    if tags:
+        tags_display = ", ".join(tags)
+        print(colored(f"      Tags: {tags_display}", Colors.BRIGHT_BLACK))
+    else:
+        print(colored(f"      Tags: (none yet)", Colors.BRIGHT_BLACK))
+
     print(colored(f"      Conversation Turns: {turns}", Colors.BRIGHT_BLACK))
 
 
@@ -228,7 +237,10 @@ def print_forms_analysis(state: Dict[str, Any]):
     print_separator("═")
 
     complexity = state.get('estimated_complexity', 'N/A')
-    print(colored(f"\n📊 Complexity: {complexity.upper()}", Colors.BRIGHT_WHITE, bold=True))
+    if complexity and complexity != 'N/A':
+        print(colored(f"\n📊 Complexity: {complexity.upper()}", Colors.BRIGHT_WHITE, bold=True))
+    else:
+        print(colored(f"\n📊 Complexity: N/A", Colors.BRIGHT_WHITE, bold=True))
 
     forms = state.get('required_forms', [])
     print(colored(f"\n📋 Required Forms ({len(forms)}):", Colors.BRIGHT_WHITE, bold=True))
@@ -424,11 +436,11 @@ async def interactive_chat(session_id: Optional[str] = None):
             print_assistant_message(result.get('assistant_response', ''), result.get('quick_replies', []))
             print_progress(result)
 
-            # Check if transitioned to forms analysis
-            if result.get('current_phase') == 'forms_analysis':
-                print(colored("\n🎉 Conversation complete! Generating forms analysis...", Colors.BRIGHT_GREEN, bold=True))
+            # Check if forms analysis is complete (completed phase with forms data)
+            if result.get('current_phase') == 'completed' and result.get('required_forms'):
+                print(colored("\n🎉 Forms analysis complete!", Colors.BRIGHT_GREEN, bold=True))
                 print_forms_analysis(result)
-                print_success("Forms analysis completed!")
+                print_success("Analysis completed!")
 
                 # Ask if user wants to save
                 save_input = input(colored("\n💾 Save this session? (y/n): ", Colors.BRIGHT_YELLOW)).strip().lower()
@@ -441,8 +453,8 @@ async def interactive_chat(session_id: Optional[str] = None):
 
                 break
 
-            # Check if completed
-            if result.get('current_phase') == 'completed':
+            # Check if completed without forms (shouldn't normally happen)
+            elif result.get('current_phase') == 'completed':
                 print(colored("\n✅ Consultation completed!", Colors.BRIGHT_GREEN, bold=True))
                 break
 

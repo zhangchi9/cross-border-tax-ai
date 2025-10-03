@@ -24,7 +24,8 @@
       "Bash(set PYTHONPATH=%PYTHONPATH%)",
       "Bash(%CD%)",
       "Bash(copy backend.env .env)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(del test_forms_analysis.py)"
     ],
     "deny": [],
     "ask": []

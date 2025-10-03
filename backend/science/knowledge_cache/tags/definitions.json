@@ -1,5 +1,29 @@
 {
   "tag_definitions": {
+    "tag_id": {
+      "id": "tag_id",
+      "name": "Human-readable tag name",
+      "description": "Clear explanation of the tax situation in plain English",
+      "forms": {
+        "us": [
+          {
+            "form": "Form Name",
+            "note": "Description or purpose"
+          },
+          {
+            "form": "Form Name",
+            "note": "Description or purpose"
+          }
+        ],
+        "ca": [
+          {
+            "form": "Form Name",
+            "note": "Description or purpose"
+          }
+        ]
+      },
+      "why": "Brief justification for why these forms are required\n```"
+    },
     "us_person_worldwide_filing": {
       "id": "us_person_worldwide_filing",
       "name": "U.S. person (citizen/green-card holder) - worldwide U.S. filing",

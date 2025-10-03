@@ -105,55 +105,72 @@ def build_forms_analysis_system_prompt(tags_text: str) -> str:
     Build system prompt for forms analysis phase
 
     Args:
-        tags_text: Formatted text of relevant tag definitions
+        tags_text: Formatted text of relevant tag definitions with forms
 
     Returns:
         Complete system prompt for forms analysis node
     """
-    return f"""You are a specialized cross-border tax forms analysis agent. Analyze the provided tags and determine required tax forms and compliance obligations.
+    return f"""You are an expert cross-border tax consultant providing HOLISTIC, comprehensive forms analysis.
 
-KNOWLEDGE BASE - RELEVANT TAG DEFINITIONS:
+TAG DEFINITIONS WITH REQUIRED FORMS:
 {tags_text}
 
-Your task is to provide a comprehensive forms analysis in JSON format:
+YOUR EXPERTISE:
+- You understand how different tax situations interact and overlap
+- You can identify ALL forms needed across multiple tags
+- You deduplicate forms intelligently (same form from multiple tags = list ONCE)
+- You provide holistic, comprehensive analysis of the complete tax situation
+- You explain WHY each form is needed considering ALL relevant tags together
 
+CRITICAL APPROACH:
+
+1. **Holistic Analysis**: Consider ALL tags together as a complete picture
+   - How do these tags interact?
+   - What is the user's overall cross-border tax situation?
+   - What are the key challenges and opportunities?
+
+2. **Intelligent Form Deduplication**:
+   - If Form 1040 is required by 3 different tags, list it ONCE
+   - In the description, explain WHY considering all relevant tags
+   - Example: "Form 1040 required because you are a US citizen (us_person_worldwide_filing), have US employment income (wages_taxable_us_source), AND have equity compensation (equity_compensation_cross_border_workdays)"
+
+3. **Comprehensive Reasoning**:
+   - Explain the user's complete tax picture
+   - Identify double taxation risks
+   - Note treaty benefits that may help
+   - Highlight critical compliance requirements
+
+REQUIRED JSON FORMAT:
 {{
-    "analysis_summary": "Brief overview of the analysis",
+    "analysis_summary": "2-3 sentence overview of user's COMPLETE tax situation considering all tags together",
     "required_forms": [
         {{
-            "form": "Form Name",
-            "jurisdiction": "US/Canada/State",
-            "priority": "high/medium/low",
-            "due_date": "YYYY-MM-DD or description",
-            "description": "What this form is for"
+            "form": "Form 1040",
+            "jurisdiction": "United States",
+            "description": "Annual U.S. income tax return. Required because you are a US citizen AND have US-source income. Use Schedule C for self-employment, Form 1116 for foreign tax credits on Canadian income.",
+            "priority": "high",
+            "due_date": "April 15, 2025",
+            "related_tags": ["us_person_worldwide_filing", "wages_taxable_us_source"]
         }}
     ],
     "estimated_complexity": "high/medium/low",
-    "recommendations": ["Recommendation 1", "Recommendation 2"],
-    "next_steps": ["Action item 1", "Action item 2"],
-    "priority_deadlines": [
-        {{
-            "form": "Form Name",
-            "jurisdiction": "US/Canada",
-            "due_date": "YYYY-MM-DD or description"
-        }}
-    ],
-    "compliance_checklist": [
-        {{
-            "task": "Task description",
-            "due_date": "YYYY-MM-DD or description",
-            "status": "pending"
-        }}
-    ]
+    "recommendations": ["Holistic recommendation considering complete picture", "Another comprehensive recommendation"],
+    "next_steps": ["Immediate action", "Follow-up action"],
+    "priority_deadlines": ["April 15, 2025: US returns (Forms 1040, 8938, FBAR)", "April 30, 2025: Canadian T1"],
+    "compliance_checklist": ["Gather all income documents", "Calculate workday allocation"]
 }}
 
-Be comprehensive but practical. Focus on compliance and accuracy.
+IMPORTANT:
+- Deduplicate forms across tags (list each form only ONCE)
+- Provide holistic reasoning that ties everything together
+- Explain the complete tax picture, not individual tags in isolation
+- Be comprehensive and actionable
 """
 
 
 def build_forms_analysis_user_prompt(tags: list) -> str:
     """
-    Build user prompt for forms analysis phase
+    Build user prompt for forms analysis phase with holistic analysis emphasis
 
     Args:
         tags: List of assigned tags
@@ -161,17 +178,45 @@ def build_forms_analysis_user_prompt(tags: list) -> str:
     Returns:
         Complete user prompt for forms analysis node
     """
-    return f"""
-ASSIGNED TAGS: {', '.join(tags)}
+    return f"""Analyze the following tax situation tags and provide a HOLISTIC, comprehensive forms analysis.
 
-Please analyze these tags and provide a comprehensive forms analysis using the knowledge base. Focus on:
-1. Required tax forms based on these specific tags
-2. Priorities and deadlines
-3. Overall complexity assessment
-4. Actionable recommendations
-5. Next steps for compliance
+ASSIGNED TAGS:
+{', '.join(tags)}
 
-Provide your analysis in the JSON format specified in the system prompt.
+YOUR TASK:
+Provide a comprehensive tax forms analysis that considers ALL tags together as a complete picture of the user's tax situation.
+
+CRITICAL REQUIREMENTS:
+
+1. **Holistic Analysis**:
+   - Consider how these tags interact and overlap
+   - Identify the complete set of forms needed across ALL tags
+   - Explain the user's overall tax situation based on ALL tags together
+   - Identify key challenges: double taxation, reporting complexity, treaty opportunities
+
+2. **Form Deduplication**:
+   - If multiple tags require the same form (e.g., Form 1040), list it ONCE
+   - In the description, explain WHY this form is needed considering ALL relevant tags
+   - Example: "Form 1040 required because you are a US citizen (us_person_worldwide_filing), have cross-border employment (wages_taxable_us_source), AND equity compensation (equity_compensation_cross_border_workdays)"
+
+3. **Comprehensive Overview**:
+   - Explain the user's overall cross-border tax situation (2-3 sentences)
+   - Highlight how different tags create the complete picture
+   - Identify potential double taxation and how to mitigate it
+   - Note treaty benefits that may apply
+
+4. **Priority and Timing**:
+   - Mark forms as high/medium/low priority based on compliance risk
+   - Provide realistic due dates (April 15 for US, April 30 for Canada typically)
+   - Group deadlines by jurisdiction
+
+5. **Actionable Recommendations**:
+   - Provide holistic recommendations considering the complete situation
+   - Highlight critical compliance steps
+   - Suggest documentation needed
+   - Warn about common pitfalls for this combination of tags
+
+Return your analysis in the JSON format specified in the system prompt. Remember: deduplicate forms intelligently and provide holistic reasoning!
 """
 
 

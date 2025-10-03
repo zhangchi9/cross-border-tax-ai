@@ -1407,6 +1407,13 @@ class FormsAnalysisNode(BaseNode):
         except Exception as e:
             state["error_message"] = f"Forms analysis error: {str(e)}"
             state["assistant_response"] = "I apologize, but I encountered an error during forms analysis. Please consult with a tax professional."
+            # Set default values to prevent NoneType errors downstream
+            state["estimated_complexity"] = "high"
+            state["required_forms"] = []
+            state["recommendations"] = ["Consult with a qualified tax professional"]
+            state["next_steps"] = []
+            state["priority_deadlines"] = []
+            state["compliance_checklist"] = []
             return state
 
     def _generate_forms_analysis(self, state: TaxConsultationState) -> Dict[str, Any]:
@@ -1426,7 +1433,9 @@ class FormsAnalysisNode(BaseNode):
                 tags_text += f"\n**{tag_name}**: {description}\n"
                 if forms:
                     for jurisdiction, form_list in forms.items():
-                        tags_text += f"  - {jurisdiction}: {', '.join(form_list)}\n"
+                        # Each form in form_list is a dict with 'form' and 'note' keys
+                        form_names = [f.get('form', str(f)) if isinstance(f, dict) else str(f) for f in form_list]
+                        tags_text += f"  - {jurisdiction}: {', '.join(form_names)}\n"
 
         system_prompt = build_forms_analysis_system_prompt(tags_text)
         user_prompt = build_forms_analysis_user_prompt(tags)
